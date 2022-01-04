@@ -1,0 +1,7 @@
+{
+  "name": "AISClone",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
