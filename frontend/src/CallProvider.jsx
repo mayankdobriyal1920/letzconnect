@@ -19,12 +19,6 @@ const MSG_MAKE_MODERATOR = "make-moderator";
 const MSG_MAKE_SPEAKER = "make-speaker";
 const MSG_MAKE_LISTENER = "make-listener";
 const FORCE_EJECT = "force-eject";
-// let bufferSize = 4096,
-//     AudioContext,
-//     context,
-//     processor,
-//     input,
-//     globalStream;
 export const CallProvider = ({ children }) => {
 
   const dispatch = useDispatch();
