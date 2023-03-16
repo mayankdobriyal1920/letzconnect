@@ -1,0 +1,20 @@
+
+.header_down_section{
+    padding: 8px;
+}
+.sub_header_section ion-back-button{
+    font-size: 14px;
+    color: #fff;
+}
+.sub_header_section ion-toolbar {
+    /* --background: #3a57c4!important; */
+    --background: linear-gradient(165deg, rgba(233,65,100,1) 0%, rgba(241,137,58,1) 100%) !important;
+}
+.sub_header_section ion-title {
+    color: #fff;
+    font-weight: 400!important;
+}
+.header-md::after {
+    background-image: none!important;
+    content: "";
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Letz Connect",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

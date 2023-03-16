@@ -1,0 +1,6 @@
+{
+	"appId": "app.letzconnect.com",
+	"appName": "Letz Connect",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

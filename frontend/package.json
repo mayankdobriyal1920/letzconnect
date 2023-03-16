@@ -1,0 +1,103 @@
+{
+  "name": "Letzconnect",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "3.4.0",
+    "@capacitor/app": "1.0.7",
+    "@capacitor/camera": "^1.2.4",
+    "@capacitor/core": "^3.3.3",
+    "@capacitor/device": "^1.1.2",
+    "@capacitor/filesystem": "^1.1.0",
+    "@capacitor/haptics": "1.1.3",
+    "@capacitor/keyboard": "1.2.0",
+    "@capacitor/status-bar": "1.0.6",
+    "@daily-co/daily-js": "^0.21.0",
+    "@ionic-native/crop": "^5.36.0",
+    "@ionic/pwa-elements": "^3.1.1",
+    "@ionic/react": "^6.0.0",
+    "@ionic/react-router": "^6.0.0",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.6.3",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^12.19.15",
+    "@types/react": "^16.14.3",
+    "@types/react-dom": "^16.9.10",
+    "@types/react-redux": "^7.1.21",
+    "@types/react-router": "^5.1.11",
+    "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.24.0",
+    "bootstrap": "^5.1.3",
+    "capacitor-audio-toggle": "^0.1.12",
+    "ionicons": "^5.4.0",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "peerjs": "^1.3.2",
+    "react": "^17.0.1",
+    "react-bootstrap": "^2.1.1",
+    "react-dom": "^17.0.1",
+    "react-image-crop": "^9.0.5",
+    "react-redux": "^7.2.6",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-screen-wake-lock": "^2.0.0",
+    "react-scripts": "4.0.2",
+    "react-speech-recognition": "^3.9.0",
+    "react-virtuoso": "^2.5.2",
+    "redux-thunk": "^2.4.1",
+    "socket.io-client": "^4.4.1",
+    "socket.io-stream": "^0.9.1",
+    "styled-components": "^5.3.3",
+    "typescript": "^4.1.3",
+    "uuid": "^8.3.2",
+    "web-vitals": "^0.2.4",
+    "websocket": "^1.0.34",
+    "workbox-background-sync": "^5.1.4",
+    "workbox-broadcast-update": "^5.1.4",
+    "workbox-cacheable-response": "^5.1.4",
+    "workbox-core": "^5.1.4",
+    "workbox-expiration": "^5.1.4",
+    "workbox-google-analytics": "^5.1.4",
+    "workbox-navigation-preload": "^5.1.4",
+    "workbox-precaching": "^5.1.4",
+    "workbox-range-requests": "^5.1.4",
+    "workbox-routing": "^5.1.4",
+    "workbox-strategies": "^5.1.4",
+    "workbox-streams": "^5.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts --openssl-legacy-provider  build",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@capacitor/cli": "3.3.3",
+    "@types/lodash": "^4.14.178",
+    "@types/socket.io-client": "^3.0.0",
+    "@types/styled-components": "^5.1.19",
+    "@types/uuid": "^8.3.3",
+    "@types/websocket": "^1.0.4"
+  },
+  "description": "An Ionic project"
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Letz Connect</string>
+    <string name="title_activity_main">Letz Connect</string>
+    <string name="package_name">app.letzconnect.com</string>
+    <string name="custom_url_scheme">app.letzconnect.com</string>
+</resources>
