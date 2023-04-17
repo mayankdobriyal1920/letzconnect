@@ -1,7 +1,7 @@
 // Load module
 import mysql from 'mysql'
 // Initialize pool
-let pool = mysql.createPool({
+var pool = mysql.createPool({
     connectionLimit : 10,
     host     : 'localhost',
     user     : 'admin_admin',

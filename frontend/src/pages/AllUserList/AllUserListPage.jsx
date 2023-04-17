@@ -14,31 +14,24 @@ const AllUserListPage = () => {
     const [email,setEmail] = useState('');
     const [about,setAbout] = useState('');
     const dispatch = useDispatch();
-    const [showToast, setShowToast] = useState(false);
-    const [showDeleteToast, setShowDeleteToast] = useState(false);
+    const [showToast, setShowToast] = useState(false); 
+    const [showDeleteToast, setShowDeleteToast] = useState(false); 
     const [addingUserLoading, setAddingUserLoading] = useState(false);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [deleteUserId, setDeleteUserId] = useState('');
-    const [isActiveUser, setIsActiveUser] = useState(0);
-    const [password, setPassword] = useState('');
 
     const [emailAlreadyExistToast, setEmailAlreadyExistToast] = useState(false);
     let history = useHistory();
 
-    const validateUpdateForm = ()=>{
-        if(!name?.trim()?.length || !email?.trim()?.length){
-            return false;
-        }
-        return true;
-    }
-
-  const submitFormEditUser = (e) =>{
+  const submitFormEditUser = (e) =>{ 
       e.preventDefault();
       if(addingUserLoading) return;
       if(name?.trim()?.length && email?.trim()?.length){
+
+
           if(allUsersDataArray.length){
               allUsersDataArray.map((user)=>{
-                  if(user.email.toLowerCase() === email.toLowerCase() && user.id !== editUserData.id){
+                  if(user.email.toLowerCase() == email.toLowerCase() && user.id != editUserData.id){
                       setEmailAlreadyExistToast(true);
                       return false;
                   }
@@ -53,9 +46,6 @@ const AllUserListPage = () => {
               created_by: editUserData.created_by,
               avatar:editUserData.avatar,
               isAdmin:editUserData.isAdmin,
-              isSuperAdmin:editUserData.isSuperAdmin,
-              is_active:isActiveUser,
-              password:password,
           }
           setAddingUserLoading(true);
           dispatch(actionToEditNewUserData(payload));
@@ -64,8 +54,6 @@ const AllUserListPage = () => {
               setEmail('');
               setName('');
               setAbout('');
-              setPassword('');
-              setIsActiveUser(0);
               setEditUserData({});
               setAddingUserLoading(false);
           },500);
@@ -88,7 +76,6 @@ const AllUserListPage = () => {
       setName(user.name);
       setEmail(user.email);
       setAbout(user.about);
-      setIsActiveUser(user.is_active);
       setEditUserData(user);
   }
 
@@ -126,7 +113,7 @@ const AllUserListPage = () => {
 
     let userData = [];
     users.map((user,key)=>{
-        if(user.id !== userInfo.id) {
+        if(user.id != userInfo.id) {
             userData.push(<UserDataComponent user={user} userKey={key} key={user.id}/>);
         }
     })
@@ -186,8 +173,7 @@ const AllUserListPage = () => {
        </div>
 
           {(Object.keys(editUserData).length) ?
-              <div className={"edit_user_col_outer_div"}>
-                <div className={"edit_user_col"}>
+              <div className={"edit_user_col"}>
                   <div className="chat-list-col">
                       <div className="container">
                           <div className="account-content">
@@ -199,21 +185,8 @@ const AllUserListPage = () => {
                                       <div className="input-list">
                                           <input type="email" onChange={(e)=>setEmail(e.target.value)} placeholder="Email" required value={email}/>
                                       </div>
-                                      {(userInfo?.isAdmin) ?
-                                          <div className="input-list">
-                                              <input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" value={password}/>
-                                          </div>
-                                          : ''
-                                      }
                                       <div className="input-list">
                                           <textarea className="input2" onChange={(e)=>setAbout(e.target.value)} name="message" placeholder="About" value={about}></textarea>
-                                      </div>
-                                      <div className="input-list is_admin_select_option">
-                                          <label>is Active User :</label>
-                                          <select value={isActiveUser} onChange={(e) => setIsActiveUser(Number(e.target.value))}>
-                                              <option value={0}>No</option>
-                                              <option value={1}>Yes</option>
-                                          </select>
                                       </div>
                                       <div className="input-list">
                                           <div className={"row"}>
@@ -223,8 +196,7 @@ const AllUserListPage = () => {
                                                   </button>
                                               </div>
                                               <div className={"col"}>
-                                                  <button className="button button-big account-btn btn w-100" type={"submit"}
-                                                  disabled={!validateUpdateForm()}>
+                                                  <button className="button button-big account-btn btn w-100" type={"submit"}>
                                                       {addingUserLoading ? 'Updating...' : 'Update'}
                                                   </button>
                                               </div>
@@ -235,7 +207,6 @@ const AllUserListPage = () => {
                           </div>
                       </div>
                   </div>
-              </div>
               </div>
               :''
           }

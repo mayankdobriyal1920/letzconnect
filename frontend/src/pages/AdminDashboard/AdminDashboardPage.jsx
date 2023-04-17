@@ -1,56 +1,121 @@
 import {useState,useEffect,useCallback,useRef} from 'react';
 import {IonCol, IonContent, IonItem, IonLabel, IonPage, IonRow, IonSelect, IonSelectOption} from '@ionic/react';
 import Header from '../../components/Header/Header';
+import Peer from 'peerjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import {
-  actionToGetAllAdminUsers,
+  actionToAddInRoom,
+  actionToCreateRoom, actionToEndCallAndRemoveRoom,
   actionToGetAllCallLogData,
   actionToGetAllUserData,
   actionToGetLoginToken,
-  actionToUpdateCallLogData
 } from '../../actions/UserAction';
 import loader from '../../theme/images/loader.gif';
-import { MOD , SPEAKER} from "../../App";
-import { CallProvider, INCALL, PREJOIN, useCallState } from "../../CallProvider";
-import InCall from '../../components/InCall';
 import $ from 'jquery';
-import {getWebsocketConnectedMessage, sendWebsocketRequest} from "../../actions/helpers/WebSocketHelper";
-import {w3cwebsocket as W3CWebSocket} from "websocket";
+import {_getUniqueId, addAudioStream, removeClosePeerConnection} from '../../helpers/common';
+import InCall from "../../components/InCall";
+import {INCALL, useCallState} from "../../CallProvider";
+
 const selectedMemberId = [];
-window.callOnce = false;
+let myPeer = null;
+let myStream = null;
+const iceServers= [
+  {
+    urls: "stun:openrelay.metered.ca:80",
+  },
+  {
+    urls: "turn:openrelay.metered.ca:80",
+    username: "openrelayproject",
+    credential: "openrelayproject",
+  },
+  {
+    urls: "turn:openrelay.metered.ca:443",
+    username: "openrelayproject",
+    credential: "openrelayproject",
+  },
+  {
+    urls: "turn:openrelay.metered.ca:443?transport=tcp",
+    username: "openrelayproject",
+    credential: "openrelayproject",
+  },
+];
+
+
 const AdminDashboardPage = () => {
   let history = useHistory();
   const dispatch = useDispatch();
   const {userInfo} = useSelector((state) => state.userSignin);
   const allUsersDataArray = useSelector((state) => state.allUsersDataArray);
+  const newLeaveUserInCallData = useSelector((state) => state.newLeaveUserInCallData);
+
   const [requestToStartConCall,setRequestToStartConCall] = useState(false);
   const [callLoading,setCallLoading] = useState(false);
-  const { joinRoom } = useCallState();
-  const { view,endCall } = useCallState();
 
 
-  const submitForm = useCallback(
-    (e) => {
+  const {handleToSetViewInCall,view} = useCallState();
+
+
+  const submitForm = async (e) => {
       e.preventDefault();
       if (callLoading) return;
+      console.log('[ SELECTED MEMBERS ID ]',selectedMemberId);
+
       if(selectedMemberId?.length){
         setCallLoading(true);
         const members = selectedMemberId;
-        const userId = userInfo.id;
-        let userName = `${userId}_${MOD}`;
-        let name = '';
-        joinRoom({ userName, name , members,setCallLoading,setRequestToStartConCall});
+        const roomId = _getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId();
+        dispatch(actionToCreateRoom(members,roomId,userInfo.id));
+
+        myPeer = new Peer(userInfo.id, {
+          host: 'letscall.co.in',
+          secure:true,
+          config: {'iceServers': iceServers},
+          path:'/peerApp',
+        });
+
+
+        myPeer?.on('open', id => {
+          console.log('[PEER CONNECTION OPEN IN ID]',id);
+          let getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+          getUserMedia({video: false, audio: true}, function(stream) {
+            myStream = stream;
+            let memberData = userInfo;
+            memberData.audio = true;
+            dispatch(actionToAddInRoom(roomId,memberData));
+            setCallLoading(false);
+            setRequestToStartConCall(false);
+
+              handleToSetViewInCall();
+
+              myPeer.on('call', call => {
+                console.log('[PEER JS INCOMMING CALL]',call);
+                call.answer(stream);
+
+                const audio = document.createElement('audio');
+                call.on('stream', userAudio => {
+                  audio.id = `AUDIO-${call.peer}`;
+                  members?.map((user)=>{
+                    if(user?.id == call?.peer && !user.audio){
+                      audio.muted = true;
+                    }
+                  })
+                  addAudioStream(audio, userAudio)
+                })
+                call.on('close', () => {
+                  audio.remove()
+                })
+              })
+          }, function(err) { 
+            console.log('Failed to get local stream' ,err);
+          });
+        })
       }
-    },[joinRoom,callLoading]
-    );
+    }
 
 
   const allUserPage = () =>{
     history.push('/app/user-list');
-  }
-  const allAdminUserPage = () =>{
-    history.push('/app/admin-list');
   }
 
   const startConfrenceCallPage = () =>{
@@ -69,7 +134,7 @@ const AdminDashboardPage = () => {
   const allUsersSelectOptions = (allUsers) =>{
     let userOptions = [];
     allUsers?.map((user)=>{
-      if(user.id != userInfo.id) {
+      if(user.id !== userInfo.id) {
         userOptions.push(
             <div key={user.id} className={"row"}>
               <div className={"col-2"}>
@@ -93,7 +158,7 @@ const AdminDashboardPage = () => {
     if(e.target.checked){
       $('.select_user_input input').prop('checked', true);
       allUsersDataArray?.map((user)=>{
-        if(!selectedMemberId.includes(user.id)) {
+        if(!selectedMemberId.includes(user.id) && userInfo.id != user.id) {
           selectedMemberId.push(user.id);
         }
       })
@@ -115,180 +180,157 @@ const AdminDashboardPage = () => {
     }
   }
 
-  useEffect(()=>{
-    if(! window.callOnce) {
-      window.callOnce = true;
-      dispatch(actionToGetAllUserData(userInfo.id));
-      dispatch(actionToGetAllAdminUsers(userInfo.id));
-      dispatch(actionToGetAllCallLogData());
-      window.addEventListener("popstate", e => {
-        endCall();
-        dispatch(actionToUpdateCallLogData());
+  const endMyStreamTrackOnEndCall = ()=>{
+    if(myStream != null) {
+      myStream.getTracks().forEach(function (track) {
+        track.stop();
       });
-      dispatch(actionToGetLoginToken(userInfo.id, userInfo.token));
     }
+    if(myPeer != null){
+      myPeer.disconnect();
+    }
+    document.getElementById('userAudioSectionId').innerHTML = '';
+  }
+
+
+  const endCallFunction = () =>{
+    //dispatch(actionToUpdateCallLogData());
+    dispatch(actionToEndCallAndRemoveRoom(userInfo.id));
+    endMyStreamTrackOnEndCall();
+  }
+
+  useEffect(()=>{
+    dispatch(actionToGetAllUserData(userInfo.id));
+    dispatch(actionToGetAllCallLogData(userInfo.id));
+    window.addEventListener('beforeunload', () => {
+      //dispatch(actionToUpdateCallLogData());
+      endCallFunction();
+    });
+    //dispatch(actionToGetLoginToken(userInfo.id,userInfo.token));
   },[]);
 
-
-
-  useEffect(() => {
-    sendWebsocketRequest(JSON.stringify({
-      clientId: localStorage.getItem('clientId'),
-      data: userInfo,
-      type: "setUserDataCurrentClient"
-    }));
-  }, [userInfo]);
-
-  useEffect(() => {
-    getWebsocketConnectedMessage(W3CWebSocket,dispatch,userInfo);
-  }, []);
-
   useEffect(()=>{
-    const callDisconnectAlert = () =>{
-      return "Leaving this page will disconnect this call?";
-    }
-    const callDisconnectFunction = () =>{
-      endCall();
-      dispatch(actionToUpdateCallLogData());
-    }
-    if (view == INCALL) {
-       $(window).bind("beforeunload",callDisconnectAlert);
-       $(window).bind('unload', callDisconnectFunction);
-    }else{
-       $(window).unbind("beforeunload",callDisconnectAlert);
-       $(window).unbind('unload', callDisconnectFunction);
-    }
-  },[view]);
+     if(newLeaveUserInCallData != null){
+       removeClosePeerConnection(newLeaveUserInCallData);
+     }
+  },[newLeaveUserInCallData]);
 
-  useEffect(() => {
-    const unblock = history.block(() => {
-      if (view == INCALL) {
-        if(window.confirm("Are you want to disconnect this call?")){
-          endCall();
-          dispatch(actionToUpdateCallLogData());
-          return true;
-        }else{
-          return false;
-        }
-      }
-      return true;
-    });
-    return () => {
-      unblock();
-    };
-  }, [history,view]);
 
+  const allAdminUserPage = () =>{
+    history.push('/app/admin-list');
+  }
 
   return (
-    <>        
-    {requestToStartConCall && (view != INCALL) ?
-     <div className="before_start_user_call_section">
-       <div className="before_start_user_call_sectioninner_ctrl">
-        {callLoading ? 
-          <div className="before_start_user_call_sectioninner_ctrl_loader">
-            <img src={loader}/>
-          </div>
-        :
-        <>
-          <div className={"select_user_heading"}>
-            Select Member For Call
-          </div>
-          {(allUsersDataArray.length) ?
-              <div className={"user_select_section"}>
-                <div className={"select_user_input"}>
-                  <div className={"row"}>
-                    <div className={"col-2"}>
-                      <div className={"select_user_input"}>
-                        <input onChange={selectUserInStartCall} type={"checkbox"}/>
-                      </div>
+      <>
+        {requestToStartConCall && (view !== INCALL) ?
+            <div className="before_start_user_call_section">
+              <div className="before_start_user_call_sectioninner_ctrl">
+                {callLoading ?
+                    <div className="before_start_user_call_sectioninner_ctrl_loader">
+                      <img src={loader}/>
                     </div>
-                    <div className={"col-10"}>
-                      <div className={"user_select_name"}>
-                        Select All
+                    :
+                    <>
+                      <div className={"select_user_heading"}>
+                        Select Member For Call
                       </div>
-                    </div>
-                  </div>
-                </div>
-                {allUsersSelectOptions(allUsersDataArray)}
-              </div>
-              : <div className={"no_user_found"}>No User Found Please add user to start call.</div>
-          }
-          <div className="before_start_user_button_footer">
-            <button onClick={()=>setRequestToStartConCall(false)} className="btn cancel_button">Cancel</button>
-            <button onClick={(e)=>submitForm(e)} className="btn start_button">Start</button>
-          </div>
-        </>
-        }
-      </div>
-    </div>
-    :''
-    }
-    <IonPage>
-      <Header title={userInfo.name} avatar={userInfo.avatar} isAdmin={userInfo.isAdmin}/>
-      <IonContent fullscreen>
-        <div className="chat-list-col">
-        {(view == INCALL) ?
-          <InCall/>
-        :
-          <div className="container admin_dashboard_container">
-            <div className="row">
-              <div className="col-lg-6">
-                <div className="main-admin-screen">
-                    <ul>
-                      <li onClick={startConfrenceCallPage} className="main-admin-screen-item col-12">
-                        <a>
-                          <i className="fas fa-phone-volume"></i> Start Con Call
-                        </a>
-                      </li>
-                      <li onClick={addUserPage} className="main-admin-screen-item col-12">
-                            <a>
-                              <i className="fas fa-user"></i> Add User
-                            </a>
-                      </li>
-                      <li onClick={()=>goToThisPage('call-log')} className="main-admin-screen-item col-12">
-                        <a>
-                          <i className="fas fa-phone-square-alt"></i> Call Log
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-               </div>
-              <div className="col-lg-6 d-lg-block">
-                <div className="main-admin-screen">
-                  <ul>
-                    <li onClick={allUserPage} className="main-admin-screen-item col-12">
-                      <a>
-                        <i className="fas fa-users"></i> All Users
-                      </a>
-                    </li>
-                    {(userInfo?.isSuperAdmin) ?
-                        <li onClick={allAdminUserPage} className="main-admin-screen-item col-12">
-                          <a>
-                            <i className="fas fa-users"></i> All Admin Users
-                          </a>
-                        </li>
-                        : ''
-                    }
-                    <li onClick={()=>goToThisPage('user-setting')} className="main-admin-screen-item col-12">
-                      <a>
-                        <i className="fas fa-cogs"></i> Change Password
-                      </a>
-                    </li>
-                    <li onClick={()=>goToThisPage('help-support')} className="main-admin-screen-item col-12">
-                      <a>
-                        <i className="fas fa-hands-helping"></i> Help / Support
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+                      {(allUsersDataArray.length) ?
+                          <div className={"user_select_section"}>
+                            <div className={"select_user_input"}>
+                              <div className={"row"}>
+                                <div className={"col-2"}>
+                                  <div className={"select_user_input"}>
+                                    <input onChange={selectUserInStartCall} type={"checkbox"}/>
+                                  </div>
+                                </div>
+                                <div className={"col-10"}>
+                                  <div className={"user_select_name"}>
+                                    Select All
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            {allUsersSelectOptions(allUsersDataArray)}
+                          </div>
+                          : <div className={"no_user_found"}>No User Found Please add user to start call.</div>
+                      }
+                      <div className="before_start_user_button_footer">
+                        <button onClick={()=>setRequestToStartConCall(false)} className="btn cancel_button">Cancel</button>
+                        <button onClick={(e)=>submitForm(e)} className="btn start_button">Start</button>
+                      </div>
+                    </>
+                }
               </div>
             </div>
-          }
-        </div>
-      </IonContent>
-    </IonPage>
-    </>
+            :''
+        }
+        <IonPage>
+          <Header title={userInfo.name} avatar={userInfo.avatar} isAdmin={userInfo.isAdmin}/>
+          <IonContent fullscreen>
+            <div className="chat-list-col">
+              {(view === INCALL) ?
+                  <InCall myPeer={myPeer} myStream={myStream}/>
+                  :
+                  <div className="container admin_dashboard_container">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <div className="main-admin-screen">
+                          <ul>
+                            <li onClick={startConfrenceCallPage} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-phone-volume"></i> Start Con Call
+                              </a>
+                            </li>
+                            <li onClick={addUserPage} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-user"></i> Add User
+                              </a>
+                            </li>
+                            <li onClick={()=>goToThisPage('call-log')} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-phone-square-alt"></i> Call Log
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="col-lg-6 d-lg-block">
+                        <div className="main-admin-screen">
+                          <ul>
+                            <li onClick={allUserPage} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-users"></i> All Users
+                              </a>
+                            </li>
+                            {(userInfo?.isSuperAdmin) ?
+                                <li onClick={allAdminUserPage} className="main-admin-screen-item col-12">
+                                  <a>
+                                    <i className="fas fa-users"></i> All Admin Users
+                                  </a>
+                                </li>
+                                : ''
+                            }
+                            <li onClick={()=>goToThisPage('user-setting')} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-cogs"></i> Change Password
+                              </a>
+                            </li>
+                            <li onClick={()=>goToThisPage('help-support')} className="main-admin-screen-item col-12">
+                              <a>
+                                <i className="fas fa-hands-helping"></i> Help / Support
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              }
+            </div>
+            <div id={"userAudioSectionId"}/>
+          </IonContent>
+        </IonPage>
+      </>
   );
 };
 

@@ -1,6 +1,6 @@
 import {
-    actionToAddNewAdminUserDataLocally,
     actionToAddNewUserDataLocally,
+    actionToChangeRoomDataLocally,
     actionToDeleteUserDataLocally,
     actionToSetNewJoinRoomData,
     actionToSetRoomParticipantArray, actionToStoreCurrentCallSpeechToTextDataAddLocally,
@@ -19,13 +19,13 @@ const setUserUniqueClientId = () => {
     localStorage.setItem('clientId',uniqueId);
 }
 
-export function getWebsocketConnectedMessage(W3CWebSocket:any,dispatch:any,userData:any) {
+export function getWebsocketConnectedMessage(W3CWebSocket:any,dispatch:any) {
     setUserUniqueClientId();
     if (webSocketClient) {
         webSocketClient.onerror = webSocketClient.onopen = webSocketClient.onclose = null;
         webSocketClient.close();
     }
-    let wsUrl = `wss://letzconnects.com/api`;
+    let wsUrl = `wss://letscall.co.in/api`;
     //const wsUrl = `wss://rcr23.osolutions.com.au/api`;
     webSocketClient = new W3CWebSocket(wsUrl, null, {
         headers: {
@@ -37,27 +37,13 @@ export function getWebsocketConnectedMessage(W3CWebSocket:any,dispatch:any,userD
     })
     webSocketClient.onopen = () => {
       console.log('-------------- Websocket connection opened ------------',webSocketClient);
-        sendWebsocketRequest(JSON.stringify({
-            clientId: localStorage.getItem('clientId'),
-            data: userData,
-            type: "setUserDataCurrentClient"
-        }));
     }
     webSocketClient.onerror = () => {
         console.log('-------------- Reconnect websocket ------------',webSocketClient);
-        getWebsocketConnectedMessage(W3CWebSocket,dispatch,userData);
+        getWebsocketConnectedMessage(W3CWebSocket,dispatch);
     }
     webSocketClient.onmessage = (message:any) => {
-        let result;
-        try {
-            result = JSON.parse(message.data);
-        }  catch (e) {
-            console.log('- websocket message error -------');
-        }
-
-        if (typeof(result) !== 'undefined' && typeof(result.error) !== 'undefined') {
-            console.log('- websocket message error -------');
-        } else {
+        if(JSON.parse(message.data)) {
             const dataFromServer = JSON.parse(message.data);
             dispatch(handleWebSocketEventCall(dataFromServer))
         }
@@ -65,7 +51,7 @@ export function getWebsocketConnectedMessage(W3CWebSocket:any,dispatch:any,userD
     webSocketClient.onclose = function () {
         console.log('-------------- Closed Reconnect websocket ------------',webSocketClient);
         setTimeout(function(){
-            getWebsocketConnectedMessage(W3CWebSocket,dispatch,userData);
+            getWebsocketConnectedMessage(W3CWebSocket,dispatch);
         },1000)
     }
 
@@ -78,24 +64,6 @@ export function getWebsocketConnectedMessage(W3CWebSocket:any,dispatch:any,userD
     },10000)
 }
 
-export function sendWebsocketRequestMedia(data:any){
-    if(webSocketClient != null) {
-        const ws = webSocketClient;
-        const waitForConnection = function (callback:any, interval:any) {
-            if (ws.readyState === 1) {
-                callback();
-            } else {
-                //optional: implement backoff for interval here
-                setTimeout(function () {
-                    waitForConnection(callback, interval);
-                }, interval);
-            }
-        };
-        waitForConnection(function () {
-            ws.send(data);
-        }, 1000);
-    }
-}
 export function sendWebsocketRequest(data:any){
     if(webSocketClient != null) {
         const ws = webSocketClient;
@@ -124,7 +92,7 @@ export function handleWebSocketEvent(dispatch:any,state:any,data:any){
             break;
         }
         case 'addedNewRoomToJoinSocketCall': {
-            if(data?.members?.length && data?.members?.includes(userInfo?.id) && userInfo?.created_by == data?.adminId){
+            if(data.members.length && data.members.includes(userInfo.id)){
                 dispatch(actionToSetNewJoinRoomData(data.data));
             }else{
                 dispatch(actionToSetNewJoinRoomData({}));
@@ -132,29 +100,23 @@ export function handleWebSocketEvent(dispatch:any,state:any,data:any){
             break;
         }
         case 'removeRoomToJoinSocketCall': {
-            if(userInfo?.created_by == data?.adminId) {
-                dispatch(actionToSetNewJoinRoomData(null));
-            }
+            dispatch(actionToSetNewJoinRoomData(null));
             break;
         }
         case 'deleteMemberInApp': {
-            dispatch(actionToDeleteUserDataLocally(data?.data));
-            break;
-        }
-        case 'addNewAdminMemberInApp': {
-            dispatch(actionToAddNewAdminUserDataLocally(data?.data));
+            dispatch(actionToDeleteUserDataLocally(data.data));
             break;
         }
         case 'newParticipantJoinedToMeetingRoom': {
-            dispatch(actionToSetRoomParticipantArray(data?.meetingRoomParticipants));
+            dispatch(actionToSetRoomParticipantArray(data.meetingRoomParticipants));
             break;
         }
         case 'addNewMemberInApp': {
-            dispatch(actionToAddNewUserDataLocally(data?.data));
+            dispatch(actionToAddNewUserDataLocally(data.data));
             break;
         }
-        case 'streamMicrophoneAudioByGoogleCloud': {
-            dispatch(actionToStoreCurrentCallSpeechToTextDataAddLocally(data?.data));
+        case 'addSpeechToTextNewData': {
+            dispatch(actionToStoreCurrentCallSpeechToTextDataAddLocally(data.data));
             break;
         }
     }

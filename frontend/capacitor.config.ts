@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'app.letzconnect.com',
-  appName: 'Letz Connect',
+  appName: 'LETS CALL',
   webDir: 'build', 
   bundledWebRuntime: false,
 };

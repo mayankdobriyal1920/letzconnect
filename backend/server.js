@@ -12,7 +12,7 @@ const speechClient = new speech.SpeechClient(); // Creates a client
 dotenv.config();
 const app = express();
 const host = 'localhost'
-const port = 3000;
+const port = 4000;
 const server = http.createServer(app);
 export let newMeetingData = {};
 export let loggedInUserDetails = {};

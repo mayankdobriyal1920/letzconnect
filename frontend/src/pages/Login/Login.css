@@ -1,0 +1,139 @@
+ion-header.login_header_class ion-toolbar.login_header_toolbar {
+    --background: white!important;
+    --border-color: white!important;
+}
+
+.login-page-content{
+    --background: -webkit-linear-gradient(top,#7579ff,#b224ef)!important;
+}
+
+span.login_welcome_title {
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+span.login_welcome_message {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #505050;
+}
+.login_welcome_message_container {
+    margin: 46px 12px;
+}
+span.login_welcome_title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    display: block;
+}
+.login_button {
+    --background: var(--theme-color,rgb(218, 39, 46))!important;
+    --border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.login_phone_input_div_container {
+    border: 2px solid #efefef;
+    border-radius: 8px;
+    box-shadow: 0px 0px 13px 4px #f1f1f1;
+}
+
+.phone_icon svg{
+    width: 12px;
+    fill: #969696;
+}
+ion-col.ios .phone_icon {
+    margin-top: 4px;
+}
+ion-col.ios .password_icon {
+    margin-top: 4px;
+}
+.password_icon svg{
+    
+    width: 17px;
+    fill: #969696;
+
+}
+.login_input_col{
+    text-align: left;
+}
+
+.login_input{
+    border: unset!important;
+    font-size: 16px;
+    width: 100%;
+    color: #545454;
+}
+input:focus{
+    outline-offset: unset!important;
+}
+:focus{
+    outline: unset!important;
+}
+.forget_password_section {
+    text-align: right;
+    margin: 11px 0px;
+    color: #808080;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+span.signin_new_user {
+    color: #848484;
+    letter-spacing: 1px;
+}
+span.signin_new_user_link {
+    color: #1788e8;
+}
+.new_user_signin_section {
+    position: absolute;
+    bottom: 4px;
+    margin-left: 14px;
+    font-size: 12px;
+}
+.login_logo_container svg{
+    width: 90%;
+}
+.login_phone_input_div_container {
+    padding: 10px 0px!important;
+}
+.login_main_container{
+    padding: 0px 5%!important;
+}
+.signup_page_container{
+    padding: 0px 5%!important;
+    margin-top: 44px;
+}
+.login_logo_container svg {
+    width: 65%;
+}
+@media (min-width: 900px) {
+    .login_main_container{
+        padding: 0px 35%!important;
+    }
+    .signup_page_container{
+        padding: 0px 35%!important;
+        margin-top: 44px;
+    }
+    .signup_already_have_account_div span.signin_new_user {
+        font-size: 12px!important
+    }
+    .signup_already_have_account_div span.signin_new_user {
+        font-size: 13px!important;
+    }
+    .signup_already_have_account_div .signin_new_user_link {
+        font-size: 13px!important;
+    }
+    .phone_icon svg {
+        width: 16px!important;
+    }
+    .password_icon svg {
+        width: 21px!important;
+    }
+    .login_input {
+        font-size: 17px!important;
+        padding-top: 3px!important;
+    }
+    
+}

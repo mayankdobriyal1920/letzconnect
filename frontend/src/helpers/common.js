@@ -1,5 +1,7 @@
 
 import moment from 'moment'
+import $ from 'jquery';
+
 export const _getUniqueId = function () {
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
@@ -78,4 +80,43 @@ export const _fromNow = (date,currentDateTime = null)=> {
 }
 export const _getImageUrlByName = (name)=> {
  return `//letzconnects.com/api/image/`+name;
+}
+
+let peers = {};
+export const removeClosePeerConnection=(id)=> {
+    if(peers[id])
+        peers[id].close();
+    if($(`#AUDIO-${id}`).length){
+        $(`#AUDIO-${id}`).remove();
+    }
+}
+
+export const addAudioStream=(audio, stream)=> {
+    console.log('[ USER STREAM ]',audio);
+    audio.srcObject = stream;
+    audio.setAttribute('autoPlay',true);
+    audio.setAttribute('playsInline',true);
+    audio.setAttribute('controls',true);
+    if($(`#${audio.id}`).length){
+        $(`#${audio.id}`).remove();
+    }
+    document.getElementById('userAudioSectionId').appendChild(audio)
+}
+export const connectToNewUser=(user,stream,myPeer,members)=> {
+    console.log('[ NEW USER CONNECTED TO CALL]');
+    const call = myPeer.call(user.id,stream);
+    const audio = document.createElement('audio')
+    call.on('stream', userStream => {
+        audio.id = `AUDIO-${call.peer}`;
+        members?.map((user)=>{
+            if(user?.id == call?.peer && !user.audio){
+                audio.muted = true;
+            }
+        })
+        addAudioStream(audio, userStream)
+    })
+    call.on('close', () => {
+        audio.remove()
+    })
+    peers[user.id] = call;
 }

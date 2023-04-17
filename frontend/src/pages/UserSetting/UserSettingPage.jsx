@@ -60,7 +60,6 @@ const UserSettingPage = () => {
             duration={3000}
         />
       <IonContent fullscreen>
-          <div className={"chat-list-col"}>
           <div className="account-content">
               <div className="account-form">
                   <form>
@@ -86,7 +85,6 @@ const UserSettingPage = () => {
                       </div>
                   </form>
               </div>
-          </div>
           </div>
       </IonContent>
     </IonPage>

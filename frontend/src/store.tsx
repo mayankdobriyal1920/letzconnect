@@ -1,12 +1,13 @@
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import {
-  activeSpeakingUserDataReducer, allAdminUsersDataArrayReducer,
+  activeSpeakingUserDataReducer,
   allCallLogDataReducer,
   allRoomMeetingParticipantArrayReducer,
   allUsersDataArrayReducer,
-  allUsersInCallReducer, currentCallSpeechToTextReducer,
-  newJoinRoomDataReducer,
+  allUsersInCallReducer, callSocketMessageBroadcastReducer, currentCallSpeechToTextReducer,
+  currentRoomDataReducer, myCurrentAudioChangeReducer, newAddedUserInCurrentCallReducer,
+  newJoinRoomDataReducer, newLeaveUserInCallDataReducer,
   newMeetingCallFrameReducer,
   roomMeetingViewNameReducer,
   userSigninReducer
@@ -24,13 +25,27 @@ const initialState = {
   roomMeetingViewName:'PREJOIN',   
   allRoomMeetingParticipantArray:[],
   allUsersInCall:[],
-  allAdminUsersDataArray:[],
   allCallLogData:[],
   currentCallSpeechToText:[],
   activeSpeakingUserData:{},
+
+  //// temp
+  currentRoomData:{roomId:null,members:[]},
+  callSocketMessageBroadcast:'',
+  myCurrentAudioChange:'MUTE',
+  newAddedUserInCurrentCall:null,
+  newLeaveUserInCallData:null
+  //// temp
 };
 export const rootReducer = combineReducers({
-  allAdminUsersDataArray: allAdminUsersDataArrayReducer,
+  //// temp
+  newLeaveUserInCallData:newLeaveUserInCallDataReducer,
+  myCurrentAudioChange:myCurrentAudioChangeReducer,
+  callSocketMessageBroadcast: callSocketMessageBroadcastReducer,
+  currentRoomData: currentRoomDataReducer,
+  newAddedUserInCurrentCall:newAddedUserInCurrentCallReducer,
+  //// temp
+
   currentCallSpeechToText: currentCallSpeechToTextReducer,
   allCallLogData: allCallLogDataReducer,
   allUsersInCall: allUsersInCallReducer,

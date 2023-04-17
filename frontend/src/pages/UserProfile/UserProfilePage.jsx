@@ -79,7 +79,6 @@ const UserProfilePage = () => {
             name:userInfo.name,
             email:userInfo.email,
             description:userInfo.about,
-            created_by: userInfo.created_by,
             avatar:userInfo.avatar,
             isAdmin:userInfo.isAdmin,
         }

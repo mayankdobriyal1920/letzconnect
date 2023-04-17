@@ -8,6 +8,15 @@
     color: #fff;
     font-size: 26px;
 }
+#zmmtg-root{
+    display: none;
+}
+ion-app.ion-page {
+    width: 100vw!important;
+}
+.chat-list-col {
+    width: 103vw!important;
+}
 .username_initial {
     width: 100px;
     line-height: 40px;
@@ -22,6 +31,10 @@
     border-width: 5px;
     border-color: #eb8453;
     border-style: solid;
+}
+#userAudioSectionId{
+    display: none!important;
+    opacity: 0!important;
 }
 .vertual_list_scroll_booking_page {
     height: calc(100vh - 96px)!important;

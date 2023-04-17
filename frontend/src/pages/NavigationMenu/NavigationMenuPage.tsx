@@ -90,7 +90,7 @@ const NavigationMenuPage = () => {
                                         <a className="settings" onClick={() => goToThisPage('help-support')}>
                                             <i className="fa fa-question-circle"></i>
                                             Help / Support
-                                         </a>
+                                        </a>
                                     </li>
                                     <li>
                                         <a className="logout" onClick={()=>setShowLogoutAlert(true)}>

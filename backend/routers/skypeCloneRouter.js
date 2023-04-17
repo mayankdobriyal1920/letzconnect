@@ -1,6 +1,8 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import nodemailer  from 'nodemailer';
+import request  from 'request';
+import jwt from 'jsonwebtoken';
 const skypeCloneRouter = express.Router();
 import {
     loginUser,
@@ -82,11 +84,11 @@ skypeCloneRouter.post(
                     }
 
                     const transporter = nodemailer.createTransport({
-                        host: "letzconnects.com",
+                        host: "letscall.co.in",
                         port: 465,
                         secure: true,
                         auth: {
-                            user: "no-reply@letzconnects.com",
+                            user: "no-reply@letscall.co.in",
                             pass: "Sunny@Conn1*",
                         },
                         tls: {
@@ -97,7 +99,7 @@ skypeCloneRouter.post(
                     const mailOptions = {
                         from: 'no-reply@letzconnects.com',
                         to: req.body.email,
-                        subject: 'Otp verification mail for letz connects website',
+                        subject: 'Otp verification mail for lets call website',
                         html: `<h1>Welcome</h1><p>This is your one time password <b>${otp}</b></p>`
                     };
                     transporter.sendMail(mailOptions, function(error, info){
@@ -121,6 +123,7 @@ skypeCloneRouter.post(
 skypeCloneRouter.get(
     '/users/:id',
     expressAsyncHandler(async (req, res) => {
+        console.log('responseToSend',req.params);
         let responseToSend = {success:0,userData:[]};
         getAllUserData(req.params.id)
             .then(user => {
@@ -136,6 +139,60 @@ skypeCloneRouter.get(
                 }
             }).catch(error => {
             res.status(500).send(error);
+        })
+    })
+);
+
+const zoomJWTApiKey = 'Ug1Pl4LAT4SfeyEbgM6UfQ';
+const zoomJWTApiSecret = 'NDQsnjHiEc4GrA4uFOtmDmluNOOO0SIK3CdR';
+skypeCloneRouter.post(
+    '/actionToCreateMeetingApiCall',
+    expressAsyncHandler(async (req, res) => {
+        const zoomApiUrl = 'https://api.zoom.us/v2/users/mayankdobriyal1920@gmail.com/meetings';
+        let token = jwt.sign({iss:zoomJWTApiKey,exp:new Date().getTime() + 10000}, zoomJWTApiSecret);
+        let options = {
+            method: 'POST',
+            uri: zoomApiUrl,
+            body:req.body,
+            auth:{
+                bearer:token
+            },
+            json: true,
+            headers: {
+                'User-Agent':'Zoom-api-Jwt-Request',
+                'Content-Type': 'application/json',
+            },
+        }
+
+        request(options,function (error,response){
+            if (error) throw new Error(error);
+            let responseBody = response?.body;
+            res.status(200).send(responseBody);
+        })
+    })
+);
+skypeCloneRouter.get(
+    '/actionToCreateZakTokenApiCall',
+    expressAsyncHandler(async (req, res) => {
+        const zoomApiUrl = 'https://api.zoom.us/v2/users/mayankdobriyal1920@gmail.com/token?type=zak';
+        let token = jwt.sign({iss:zoomJWTApiKey,exp:new Date().getTime() + 10000}, zoomJWTApiSecret);
+        let options = {
+            method: 'GET',
+            uri: zoomApiUrl,
+            auth:{
+                bearer:token
+            },
+            json: true,
+            headers: {
+                'User-Agent':'Zoom-api-Jwt-Request',
+                'Content-Type': 'application/json',
+            },
+        }
+
+        request(options,function (error,response){
+            if (error) throw new Error(error);
+            let responseBody = response?.body?.token;
+            res.status(200).send(responseBody)
         })
     })
 );

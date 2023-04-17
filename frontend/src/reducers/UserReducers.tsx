@@ -1,5 +1,5 @@
 import {
-    ACTIVE_SPEAKING_USER_DATA, ALL_ADMIN_DATA_SUCCESS,
+    ACTIVE_SPEAKING_USER_DATA,
     ALL_CALL_LOG_DATA,
     ALL_ROOM_MEETING_PARTICIPANT_DATA,
     ALL_USER_DATA_SUCCESS, ALL_USERS_IN_CALL, CURRENT_CALL_SPEECH_TO_TEXT,
@@ -10,6 +10,8 @@ import {
     USER_SIGNIN_REQUEST,
     USER_SIGNIN_SUCCESS,
     USER_SIGNOUT,
+    CURRENT_ROOM_DETAILS,
+    CALL_SOCKET_MESSAGE_BROADCAST, MY_CURRENT_AUDIO_CHANGE, NEW_ADDED_USER_IN_CALL_DATA, NEW_LEAVE_USER_IN_CALL_DATA,
 } from '../constants/UserConstants';
     
     export const userSigninReducer = (state = {}, action:any) => {
@@ -100,14 +102,56 @@ import {
           return state;
       }
     };
-    export const allAdminUsersDataArrayReducer = (state = {}, action:any) => {
+
+
+
+
+    ////  temp //////
+    export const currentRoomDataReducer = (state = {}, action:any) => {
       switch (action.type) {
-        case ALL_ADMIN_DATA_SUCCESS:
+        case CURRENT_ROOM_DETAILS:
+          return action.payload;        
+        default:
+          return state;
+      }
+    };
+
+    export const callSocketMessageBroadcastReducer = (state = {}, action:any) => {
+      switch (action.type) {
+        case CALL_SOCKET_MESSAGE_BROADCAST:
           return action.payload;
         default:
           return state;
       }
     };
+    export const myCurrentAudioChangeReducer = (state = {}, action:any) => {
+        switch (action.type) {
+            case MY_CURRENT_AUDIO_CHANGE:
+                return action.payload;
+            default:
+                return state;
+        }
+    };
+    export const newAddedUserInCurrentCallReducer = (state = {}, action:any) => {
+        switch (action.type) {
+            case NEW_ADDED_USER_IN_CALL_DATA:
+                return action.payload;
+            default:
+                return state;
+        }
+    };
+    export const newLeaveUserInCallDataReducer = (state = {}, action:any) => {
+        switch (action.type) {
+            case NEW_LEAVE_USER_IN_CALL_DATA:
+                return action.payload;
+            default:
+                return state;
+        }
+    };
+   ////  temp //////
+
+    
+
 
     
     
