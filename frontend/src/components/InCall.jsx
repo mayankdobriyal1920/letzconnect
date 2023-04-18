@@ -358,20 +358,26 @@ const InCall = ({myPeer,myStream}) => {
                                                         {(userInfo.isAdmin) ?
                                                             <>
                                                                 <div className="col-md-6 col-6">
-                                                                    <button type={"button"} onClick={()=>{setAudioToggleAction(volumeOn)}} className={"call-item "+(volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
-                                                                        {volumeOn === 'speaker' ?
-                                                                            <i className="fa fa-volume-up"></i>
-                                                                            :
-                                                                            <i className="fa fa-volume-down"></i>
-                                                                        }
-                                                                    </button>
+                                                                    {(Capacitor.isNativePlatform()) ?
+                                                                        <button type={"button"} onClick={() => {
+                                                                            setAudioToggleAction(volumeOn)
+                                                                        }}
+                                                                                className={"call-item " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
+                                                                            {volumeOn === 'speaker' ?
+                                                                                <i className="fa fa-volume-up"></i>
+                                                                                :
+                                                                                <i className="fa fa-volume-down"></i>
+                                                                            }
+                                                                        </button>
+                                                                        : ''
+                                                                    }
                                                                 </div>
                                                                 <div className="col-md-6 col-6">
-                                                                    <button type={"button"} className="call-item" onClick={handleAudioChange}>
-                                                                        {myCurrentAudioChange != 'MUTE' ? (
+                                                                    <button type={"button"} className="call-item" onClick={()=>handleAudioChange(myCurrentAudioChange)}>
+                                                                        {myCurrentAudioChange !== 'MUTE' ? (
                                                                             <MicIcon type="simple" />
                                                                         ) : (
-                                                                            <i className={"fa fa-microphone-slash"}></i>
+                                                                            <i className={"fa fa-microphone-slash"}/>
                                                                         )}
                                                                     </button>
                                                                 </div>
@@ -382,7 +388,7 @@ const InCall = ({myPeer,myStream}) => {
                                                         {(userInfo.isAdmin) ?
                                                             <div className="col-md-6 col-6">
                                                                 <button type={"button"} onClick={()=>{setRequestToAddNewMemberFunction()}} className="call-item">
-                                                                    <i className="fa fa-user-plus"></i>
+                                                                    <i className="fa fa-user-plus"/>
                                                                 </button>
                                                             </div>
                                                             :''}
