@@ -1,4 +1,4 @@
-import { useMemo,useState,useEffect,useRef } from "react";
+import React, { useMemo,useState,useEffect,useRef } from "react";
 import { useCallState } from "../CallProvider.jsx";
 import Participant from "./Participant";
 import Counter from "./Counter.jsx";
@@ -235,10 +235,6 @@ const InCall = ({myPeer,myStream}) => {
     }
     useEffect(()=>{
         keepAwake();
-        if(Capacitor.isNativePlatform()) {
-            setVolumeOn('earpiece');
-            AudioToggle.setAudioMode({mode: 'earpiece'});
-        }
         return ()=>{
             allowSleep();
             if(userInfo?.isAdmin){
@@ -334,59 +330,111 @@ const InCall = ({myPeer,myStream}) => {
                                                 : ''
                                             }
 
+                                            {!userInfo?.isAdmin ?
+                                                <div className="tap_to_speak_section">
+                                                    <div className={"call-item " + (myCurrentAudioChange !== 'MUTE' ? 'process_audio' : 'user_in_call_mic')}>
+                                                        <div className="user_in_call_mic_inner">
+                                                            <div className="user_in_call_mic_inner_inner">
+                                                                {(Capacitor.isNativePlatform()) ?
+                                                                    <a className={"tap_to_speak_section_inner_div"}
+                                                                       onTouchStart={handleAudioChangeParticipantTouchStart}
+                                                                       onTouchEnd={handleAudioChangeParticipantTouchEnd}>
+                                                                        {myCurrentAudioChange !== 'MUTE' ? (
+                                                                            <i className="fa fa-microphone"></i>
+                                                                        ) : (
+                                                                            <i className="fa fa-microphone-slash"></i>
+                                                                        )}
+                                                                    </a>
+                                                                    :
+                                                                    <a className={"tap_to_speak_section_inner_div"}
+                                                                       onMouseDown={handleAudioChangeParticipantTouchStart}
+                                                                       onMouseUp={handleAudioChangeParticipantTouchEnd}>
+                                                                        {myCurrentAudioChange !== 'MUTE' ? (
+                                                                            <i className="fa fa-microphone"></i>
+                                                                        ) : (
+                                                                            <i className="fa fa-microphone-slash"></i>
+                                                                        )}
+                                                                    </a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                : ''
+                                            }
+
                                             {(userInfo.isAdmin) ?
                                                 <div className="call-users">
                                                     {allMembersInCall}
                                                 </div>
                                                 : ''
                                             }
-                                            <div className="call-icons">
-                                                <ul className="call-items">
-                                                    {((Capacitor.isNativePlatform())) ?
-                                                        <li onClick={()=>{setAudioToggleAction(volumeOn)}} className={"call-item "+(volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
-                                                            <a>
-                                                                {volumeOn === 'speaker' ?
-                                                                    <i className="fa fa-volume-up"></i>
-                                                                    :
-                                                                    <i className="fa fa-volume-down"></i>
+
+                                            <div className="admin-calling-screen-bt">
+                                                <div className="container">
+                                                    <div className="row">
+                                                        {(!userInfo.isAdmin) ?
+                                                            <div className="col-md-6 col-6">
+                                                                {(Capacitor.isNativePlatform()) ?
+                                                                <button type={"button"} onClick={() => setAudioToggleAction(volumeOn)} className={"call-item speaker_button " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
+                                                                    {volumeOn === 'speaker' ?
+                                                                        <i className="fa fa-volume-up"></i>
+                                                                        :
+                                                                        <i className="fa fa-volume-down"></i>
+                                                                    }
+                                                                </button>
+                                                                    : ''
                                                                 }
-                                                            </a>
-                                                        </li>
-                                                        :''
-                                                    }
-                                                    {(userInfo.isAdmin) ?
-                                                        <li className="call-item">
-                                                            <a onClick={()=>handleAudioChange(myCurrentAudioChange)}>
-                                                                {myCurrentAudioChange != 'MUTE' ? (
-                                                                    <MicIcon type="simple" />
-                                                                ) : (
-                                                                    <MutedIcon type="simple" />
-                                                                )}
-                                                            </a>
-                                                        </li>
-                                                        :
-                                                        ''
-                                                    }
-                                                    {(userInfo.isAdmin) ?
-                                                        <li onClick={()=>{setRequestToAddNewMemberFunction()}} className="call-item">
-                                                            <a>
-                                                                <i className="fa fa-user-plus"></i>
-                                                            </a>
-                                                        </li>
-                                                        :''}
-                                                    {(userInfo.isAdmin) ?
-                                                        <li className="call-item end_call">
-                                                            <a onClick={endCallFunction} className="back link">
-                                                                <i className="fas fa-phone"></i>
-                                                            </a>
-                                                        </li>
-                                                        :
-                                                        <li className="call-item end_call">
-                                                            <a onClick={callFunctionToleaveCall} className="back link">
-                                                                <i className="fas fa-phone"></i>
-                                                            </a>
-                                                        </li>}
-                                                </ul>
+                                                            </div>
+                                                            :''
+                                                        }
+                                                        {(userInfo.isAdmin) ?
+                                                            <>
+                                                                <div className="col-md-6 col-6">
+                                                                    <button type={"button"} onClick={()=>{setAudioToggleAction(volumeOn)}} className={"call-item "+(volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
+                                                                        {volumeOn === 'speaker' ?
+                                                                            <i className="fa fa-volume-up"></i>
+                                                                            :
+                                                                            <i className="fa fa-volume-down"></i>
+                                                                        }
+                                                                    </button>
+                                                                </div>
+                                                                <div className="col-md-6 col-6">
+                                                                    <button type={"button"} className="call-item" onClick={handleAudioChange}>
+                                                                        {myCurrentAudioChange != 'MUTE' ? (
+                                                                            <MicIcon type="simple" />
+                                                                        ) : (
+                                                                            <i className={"fa fa-microphone-slash"}></i>
+                                                                        )}
+                                                                    </button>
+                                                                </div>
+                                                            </>
+                                                            :
+                                                            ''
+                                                        }
+                                                        {(userInfo.isAdmin) ?
+                                                            <div className="col-md-6 col-6">
+                                                                <button type={"button"} onClick={()=>{setRequestToAddNewMemberFunction()}} className="call-item">
+                                                                    <i className="fa fa-user-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                            :''}
+                                                        {(userInfo.isAdmin) ?
+                                                            <div className="col-md-6 col-6">
+                                                                <button type={"button"} onClick={endCallFunction} className="call-item end_call">
+                                                                    <i className="fas fa-phone"></i>
+                                                                </button>
+                                                            </div>
+                                                            :
+                                                            <div className="col-md-6 col-6">
+                                                                <button type={"button"} onClick={callFunctionToleaveCall} className="call-item end_call">
+                                                                    <i className="fas fa-phone"></i>
+                                                                </button>
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

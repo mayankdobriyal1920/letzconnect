@@ -47,6 +47,7 @@ const request = {
 
 
 const clients = {};
+const clientsMemberData = {};
 
 app.use(cors());
 app.use(function (req, res, next) {
@@ -174,6 +175,7 @@ function setupWebSocket(){
                             if(found === null)
                                 newRoomCreatedCustomApi[dataToSend.adminId]?.members.push(dataToSend.member);
 
+                            clientsMemberData[userID] = dataToSend.member.id;
 
                             dataToSend = {
                                 roomData: newRoomCreatedCustomApi[dataToSend.adminId],
@@ -274,7 +276,30 @@ function setupWebSocket(){
             }
         });
         connection.on('close', function() {
-           console.log('closed');
+           console.log('closed',clientsMemberData[userID]);
+           if(clientsMemberData[userID] && newRoomCreatedCustomApi){
+               if(Object.keys(newRoomCreatedCustomApi).length){
+                   let found = null;
+                   let roomDataId = null;
+                   Object.keys(newRoomCreatedCustomApi).map((roomId)=>{
+                       newRoomCreatedCustomApi[roomId]?.members?.map((member,key)=>{
+                           if(member?.id === clientsMemberData[userID]){
+                               found = key;
+                               roomDataId = roomId;
+                           }
+                       })
+                   })
+                   if(found !== null && roomDataId !== null){
+                       newRoomCreatedCustomApi[roomDataId].members.splice(found,1);
+                       let dataToSend = {
+                           roomData: newRoomCreatedCustomApi[roomDataId],
+                           userId: clientsMemberData[userID],
+                           type: 'leaveCurrentRunningCall'
+                       }
+                       sendMessage(dataToSend,connection);
+                   }
+               }
+           }
         });
     });
 }
