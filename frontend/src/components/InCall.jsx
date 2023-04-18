@@ -300,35 +300,6 @@ const InCall = ({myPeer,myStream}) => {
                                                     ''
                                                 }
                                             </div>
-                                            {!userInfo?.isAdmin ?
-                                                <div className="tap_to_speak_section">
-                                                    <div className={"call-item " + (myCurrentAudioChange != 'MUTE' ? 'process_audio' : 'user_in_call_mic')}>
-                                                        {(Capacitor.isNativePlatform()) ?
-                                                            <a className={"tap_to_speak_section_inner_div"}
-                                                               onTouchStart={handleAudioChangeParticipantTouchStart}
-                                                               onTouchEnd={handleAudioChangeParticipantTouchEnd}>
-                                                                {myCurrentAudioChange !== 'MUTE' ? (
-                                                                    <i className="fa fa-microphone"></i>
-                                                                ) : (
-                                                                    <i className="fa fa-microphone-slash"></i>
-                                                                )}
-                                                            </a>
-                                                            :
-                                                            <a className={"tap_to_speak_section_inner_div"}
-                                                               onMouseDown={handleAudioChangeParticipantTouchStart}
-                                                               onMouseUp={handleAudioChangeParticipantTouchEnd}>
-                                                                {myCurrentAudioChange !== 'MUTE' ? (
-                                                                    <i className="fa fa-microphone"></i>
-                                                                ) : (
-                                                                    <i className="fa fa-microphone-slash"></i>
-                                                                )}
-                                                            </a>
-                                                        }
-                                                        <div>{myCurrentAudioChange != 'MUTE' ? 'Speak' : 'Tap to speak'}</div>
-                                                    </div>
-                                                </div>
-                                                : ''
-                                            }
 
                                             {!userInfo?.isAdmin ?
                                                 <div className="tap_to_speak_section">
