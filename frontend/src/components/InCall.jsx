@@ -207,19 +207,6 @@ const InCall = ({myPeer,myStream}) => {
     }
 
     useEffect(()=>{
-        if(Capacitor.isNativePlatform()) {
-            setVolumeOn('speaker');
-            AudioToggle.setAudioMode({mode: 'speaker'});
-        }
-        if(userInfo.isAdmin){
-            dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
-        }else{
-            dispatch(actionToChangeMyCurrentAudio('MUTE'));
-        }
-    },[])
-
-
-    useEffect(()=>{
         if(newAddedUserInCurrentCall?.id != undefined){
             connectToNewUser(newAddedUserInCurrentCall,myStream,myPeer,members);
         }
@@ -235,6 +222,15 @@ const InCall = ({myPeer,myStream}) => {
     }
     useEffect(()=>{
         keepAwake();
+        if(Capacitor.isNativePlatform()) {
+            setVolumeOn('speaker');
+            AudioToggle.setAudioMode({mode: 'speaker'});
+        }
+        if(userInfo.isAdmin){
+            dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
+        }else{
+            dispatch(actionToChangeMyCurrentAudio('MUTE'));
+        }
         return ()=>{
             allowSleep();
             if(userInfo?.isAdmin){
