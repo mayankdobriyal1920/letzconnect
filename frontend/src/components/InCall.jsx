@@ -16,6 +16,8 @@ import {
 import {_getImageUrlByName, _getUserFirstName, connectToNewUser} from "../helpers/common";
 import $ from "jquery";
 import {MY_CURRENT_AUDIO_CHANGE} from "../constants/UserConstants";
+import { Haptics } from '@capacitor/haptics';
+
 const selectedMemberId = [];
 const InCall = ({myPeer,myStream}) => {
 
@@ -187,9 +189,19 @@ const InCall = ({myPeer,myStream}) => {
                 curVol = 'earpiece';
             }
             setVolumeOn(curVol);
+            Haptics.vibrate();
+            let getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+            const audio = getUserMedia({ audio: { deviceId: curVol }});
+            audio.then(stream => {
+                const audioTracks = stream.getAudioTracks();
+                audioTracks.forEach(track => {
+                    track.applyConstraints({ deviceId: curVol });
+                });
+            });
             AudioToggle.setAudioMode({mode: curVol});
         }
     }
+
 
     const handleAudioChangeParticipantTouchStart = (e) =>{
         e.preventDefault();
@@ -224,6 +236,7 @@ const InCall = ({myPeer,myStream}) => {
         if(Capacitor.isNativePlatform()) {
             setVolumeOn('speaker');
             AudioToggle.setAudioMode({mode: 'speaker'});
+            setAudioToggleAction('earpiece');
         }
         if(userInfo.isAdmin){
             dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
@@ -321,12 +334,12 @@ const InCall = ({myPeer,myStream}) => {
                                                 : ''
                                             }
 
-                                            {(userInfo.isAdmin) ?
-                                                <div className="call-users">
-                                                    {allMembersInCall}
-                                                </div>
-                                                : ''
-                                            }
+                                            {/*{(userInfo.isAdmin) ?*/}
+                                            {/*    <div className="call-users">*/}
+                                            {/*        {allMembersInCall}*/}
+                                            {/*    </div>*/}
+                                            {/*    : ''*/}
+                                            {/*}*/}
 
                                             <div className="admin-calling-screen-bt">
                                                 <div className="container">
