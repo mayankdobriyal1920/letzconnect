@@ -4,7 +4,7 @@ import Participant from "./Participant";
 import Counter from "./Counter.jsx";
 import MicIcon from "./MicIcon.jsx";
 import { useSelector,useDispatch } from 'react-redux';
-import { AudioToggle } from 'capacitor-audio-toggle';
+import { AudiotoggleBluetooth } from 'capacitor-plugin-audiotoggle-bluetooth';
 import { Capacitor } from '@capacitor/core';
 import {
     actionToChangeMyCurrentAudio,
@@ -16,8 +16,6 @@ import {
 import {_getImageUrlByName, _getUserFirstName, connectToNewUser} from "../helpers/common";
 import $ from "jquery";
 import {MY_CURRENT_AUDIO_CHANGE} from "../constants/UserConstants";
-import { Media } from '@ionic-native/media';
-
 const selectedMemberId = [];
 const InCall = ({myPeer,myStream}) => {
 
@@ -185,14 +183,12 @@ const InCall = ({myPeer,myStream}) => {
             let curVol = '';
             if (preVolume === 'earpiece') {
                 curVol = 'speaker';
-                Media.setSpeakerphoneOn(true);
+                AudiotoggleBluetooth.setAudioMode({mode:'SPEAKER'});
             } else {
                 curVol = 'earpiece';
-                Media.setSpeakerphoneOn(false);
+                AudiotoggleBluetooth.setAudioMode({mode:'EARPIECE'});
             }
             setVolumeOn(curVol);
-            console.log('Media',Media);
-            //AudioToggle.setAudioMode({mode: curVol});
         }
     }
 
@@ -228,8 +224,7 @@ const InCall = ({myPeer,myStream}) => {
         keepAwake();
         if(Capacitor.isNativePlatform()) {
             setVolumeOn('speaker');
-            //AudioToggle.setAudioMode({mode: 'speaker'});
-            Media.setSpeakerphoneOn(true);
+            AudiotoggleBluetooth.setAudioMode({mode:'SPEAKER'});
         }
         if(userInfo.isAdmin){
             dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
