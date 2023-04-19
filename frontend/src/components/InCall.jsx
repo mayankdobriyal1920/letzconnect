@@ -1,9 +1,8 @@
-import React, { useMemo,useState,useEffect,useRef } from "react";
+import React, {useMemo,useState,useEffect} from "react";
 import { useCallState } from "../CallProvider.jsx";
 import Participant from "./Participant";
 import Counter from "./Counter.jsx";
 import MicIcon from "./MicIcon.jsx";
-import MutedIcon from "./MutedIcon.jsx";
 import { useSelector,useDispatch } from 'react-redux';
 import { AudioToggle } from 'capacitor-audio-toggle';
 import { Capacitor } from '@capacitor/core';
@@ -44,7 +43,7 @@ const InCall = ({myPeer,myStream}) => {
             myPeer.disconnect();
         }
         if(document.getElementById('userAudioSectionId'))
-           document.getElementById('userAudioSectionId').innerHTML = '';
+            document.getElementById('userAudioSectionId').innerHTML = '';
     }
 
     const endCallFunction = () =>{
@@ -216,7 +215,7 @@ const InCall = ({myPeer,myStream}) => {
         let ids = [];
         members?.map((user)=>{
             if(user.id != userInfo.id)
-               ids.push(user.id);
+                ids.push(user.id);
         })
         dispatch(actionToMuteUnmuteUserCall(ids,'MUTE',userInfo.id));
     }
@@ -240,6 +239,7 @@ const InCall = ({myPeer,myStream}) => {
             }
         }
     },[])
+
     return (
         <>
             {(requestToAddNewMember) &&
@@ -266,7 +266,7 @@ const InCall = ({myPeer,myStream}) => {
                                 <div className="call-window">
                                     <div className="call-contents">
                                         <div className="call-content-wrap">
-                                            <div className="voice-call-avatar">
+                                            <div className="voice-call-avatar mt-5">
                                                 {(activeSpeakingUserData != undefined && activeSpeakingUserData != null && Object.keys(activeSpeakingUserData).length) ?
                                                     <>
                                                         {(activeSpeakingUserData?.avatar) ?
@@ -302,27 +302,18 @@ const InCall = ({myPeer,myStream}) => {
                                                     <div className={"call-item " + (myCurrentAudioChange !== 'MUTE' ? 'process_audio' : 'user_in_call_mic')}>
                                                         <div className="user_in_call_mic_inner">
                                                             <div className="user_in_call_mic_inner_inner">
-                                                                {(Capacitor.isNativePlatform()) ?
-                                                                    <a className={"tap_to_speak_section_inner_div"}
-                                                                       onTouchStart={handleAudioChangeParticipantTouchStart}
-                                                                       onTouchEnd={handleAudioChangeParticipantTouchEnd}>
-                                                                        {myCurrentAudioChange !== 'MUTE' ? (
-                                                                            <i className="fa fa-microphone"></i>
-                                                                        ) : (
-                                                                            <i className="fa fa-microphone-slash"></i>
-                                                                        )}
-                                                                    </a>
-                                                                    :
-                                                                    <a className={"tap_to_speak_section_inner_div"}
-                                                                       onMouseDown={handleAudioChangeParticipantTouchStart}
-                                                                       onMouseUp={handleAudioChangeParticipantTouchEnd}>
-                                                                        {myCurrentAudioChange !== 'MUTE' ? (
-                                                                            <i className="fa fa-microphone"></i>
-                                                                        ) : (
-                                                                            <i className="fa fa-microphone-slash"></i>
-                                                                        )}
-                                                                    </a>
-                                                                }
+                                                                <a className={"tap_to_speak_section_inner_div"}
+                                                                   onMouseDown={handleAudioChangeParticipantTouchStart}
+                                                                   onMouseUp={handleAudioChangeParticipantTouchEnd}
+
+                                                                   onTouchStart={handleAudioChangeParticipantTouchStart}
+                                                                   onTouchEnd={handleAudioChangeParticipantTouchEnd}>
+                                                                    {myCurrentAudioChange !== 'MUTE' ? (
+                                                                        <i className="fa fa-microphone"></i>
+                                                                    ) : (
+                                                                        <i className="fa fa-microphone-slash"></i>
+                                                                    )}
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -342,35 +333,30 @@ const InCall = ({myPeer,myStream}) => {
                                                     <div className="row">
                                                         {(!userInfo.isAdmin) ?
                                                             <div className="col-md-6 col-6">
-                                                                {(Capacitor.isNativePlatform()) ?
-                                                                <button type={"button"} onClick={() => setAudioToggleAction(volumeOn)} className={"call-item speaker_button " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
+                                                                <button type={"button"}
+                                                                        disabled={!Capacitor.isNativePlatform()}
+                                                                        onClick={() => setAudioToggleAction(volumeOn)} className={"call-item speaker_button " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
                                                                     {volumeOn === 'speaker' ?
                                                                         <i className="fa fa-volume-up"></i>
                                                                         :
                                                                         <i className="fa fa-volume-down"></i>
                                                                     }
                                                                 </button>
-                                                                    : ''
-                                                                }
                                                             </div>
                                                             :''
                                                         }
                                                         {(userInfo.isAdmin) ?
                                                             <>
                                                                 <div className="col-md-6 col-6">
-                                                                    {(Capacitor.isNativePlatform()) ?
-                                                                        <button type={"button"} onClick={() => {
-                                                                            setAudioToggleAction(volumeOn)
-                                                                        }}
-                                                                                className={"call-item " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
-                                                                            {volumeOn === 'speaker' ?
-                                                                                <i className="fa fa-volume-up"></i>
-                                                                                :
-                                                                                <i className="fa fa-volume-down"></i>
-                                                                            }
-                                                                        </button>
-                                                                        : ''
-                                                                    }
+                                                                    <button type={"button"} onClick={() => setAudioToggleAction(volumeOn)}
+                                                                            disabled={!Capacitor.isNativePlatform()}
+                                                                            className={"call-item " + (volumeOn === 'speaker' ? 'speaker' : 'earpiece')}>
+                                                                        {volumeOn === 'speaker' ?
+                                                                            <i className="fa fa-volume-up"></i>
+                                                                            :
+                                                                            <i className="fa fa-volume-down"></i>
+                                                                        }
+                                                                    </button>
                                                                 </div>
                                                                 <div className="col-md-6 col-6">
                                                                     <button type={"button"} className="call-item" onClick={()=>handleAudioChange(myCurrentAudioChange)}>

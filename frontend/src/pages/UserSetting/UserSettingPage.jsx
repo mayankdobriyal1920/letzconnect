@@ -38,57 +38,57 @@ const UserSettingPage = () => {
     }
 
 
-  return (
-    <IonPage>
-      <SubHeader title={'Setting'}/>
-        <IonToast
-            isOpen={showToast}
-            onDidDismiss={() => setShowToast(false)}
-            message="Password Updated successfully!"
-            duration={3000}
-        />
-        <IonToast
-            isOpen={passwordNotMatched}
-            onDidDismiss={() => setPasswordNotMatched(false)}
-            message="Wrong old password!"
-            duration={3000}
-        />
-        <IonToast
-            isOpen={conformPasswordNotMatched}
-            onDidDismiss={() => setConformPasswordNotMatched(false)}
-            message="Confirm password not matching with new password!"
-            duration={3000}
-        />
-      <IonContent fullscreen>
-          <div className="account-content">
-              <div className="account-form">
-                  <form>
-                      <div className="input-list">
-                          <input type="password" onChange={(e)=>setOldPassword(e.target.value)} placeholder="Old Password" required value={oldPassword}/>
-                      </div>
-                      <div className="input-list">
-                          <input type="password" onChange={(e)=>setNewPassword(e.target.value)} placeholder="New Password" required value={newPassword}/>
-                      </div>
-                      <div className="input-list">
-                          <input type="text" autoFocus={true} placeholder="Confirm New Password" onChange={(e)=>setConfirmPassword(e.target.value)} required value={confirmPassword}/>
-                      </div>
-                      <div className="input-list">
-                          <div className={"row"}>
-                              <div className={"col"}>
-                                  <button className="button button-big account-btn btn w-100"
-                                          onClick={(e)=>submitFormChangePassword(e)}
-                                          type={"button"}>
-                                      {addingUserLoading ? 'Updating...' : 'Update'}
-                                  </button>
-                              </div>
-                          </div>
-                      </div>
-                  </form>
-              </div>
-          </div>
-      </IonContent>
-    </IonPage>
-  );
+    return (
+        <IonPage>
+            <SubHeader title={'Setting'}/>
+            <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message="Password Updated successfully!"
+                duration={3000}
+            />
+            <IonToast
+                isOpen={passwordNotMatched}
+                onDidDismiss={() => setPasswordNotMatched(false)}
+                message="Wrong old password!"
+                duration={3000}
+            />
+            <IonToast
+                isOpen={conformPasswordNotMatched}
+                onDidDismiss={() => setConformPasswordNotMatched(false)}
+                message="Confirm password not matching with new password!"
+                duration={3000}
+            />
+            <IonContent fullscreen>
+                <div className="account-content account-form usersetting">
+
+                    <form>
+                        <div className="input-list">
+                            <input type="password" onChange={(e)=>setOldPassword(e.target.value)} placeholder="Old Password" required value={oldPassword}/>
+                        </div>
+                        <div className="input-list">
+                            <input type="password" onChange={(e)=>setNewPassword(e.target.value)} placeholder="New Password" required value={newPassword}/>
+                        </div>
+                        <div className="input-list">
+                            <input type="text" autoFocus={true} placeholder="Confirm New Password" onChange={(e)=>setConfirmPassword(e.target.value)} required value={confirmPassword}/>
+                        </div>
+                        <div className="input-list">
+                            <div className={"row"}>
+                                <div className={"col"}>
+                                    <button className="button button-big account-btn btn w-100"
+                                            onClick={(e)=>submitFormChangePassword(e)}
+                                            type={"button"}>
+                                        {addingUserLoading ? 'Updating...' : 'Update'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </IonContent>
+        </IonPage>
+    );
 };
 
 export default UserSettingPage;

@@ -101,7 +101,7 @@ const AddUserPage = () => {
                 <div className="chat-list-col">
                     <div className="container">
                         <div className="account-content">
-                            <div className="account-form">
+                            <div className="add_user_inner">
                                 <form onSubmit={submitFormAddUser}>
                                     <div className="input-list">
                                         <input type="text" placeholder="Name" onChange={(e)=>setName(e.target.value)} required value={name}/>
@@ -136,7 +136,7 @@ const AddUserPage = () => {
                                     }
                                     <div className="input-list">
                                         <button className="button button-big account-btn btn w-100" type={"submit"}
-                                        disabled={!validateUpdateForm()}
+                                                disabled={!validateUpdateForm()}
                                         >
                                             {addingUserLoading ? 'Adding...' : 'Add'}
                                         </button>

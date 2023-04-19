@@ -47,14 +47,18 @@ ul {
     width: 100%;
     padding-top: 40px;
 }
-.account-content {
-    padding: 15px;
-}
+
 .login-icon {
     text-align: center;
-    margin: 0 auto;
-    max-width: 120px;
+    display: block;
+    /* margin: 0 auto; */
+    /* max-width: 120px; */
     padding-bottom: 20px;
+}
+.account-form {
+    background: #4e4e4e;
+    padding-top: 5%;
+    padding-bottom: 5%;
 }
 .login-top-icon {
     width: 150px;
@@ -91,9 +95,26 @@ ul {
 .inner-top-icon img {
     max-width: 100px;
 }
-
+.login-icon img {
+    max-width: 20%;
+}
 .account-title {
-    margin-bottom: 20px;
+    padding-bottom: 5%;
+    padding-top: 5%;
+}
+.account-form h3 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    padding-bottom: 20px;
+}
+.account-form form {
+    width: 50%;
+    margin: 0 auto;
 }
 .account-title>h3 {
     font-size: 18px;
@@ -130,9 +151,11 @@ ul {
     width: 100%;
 }
 .account-content .input-list>a {
-    color: #222;
-    float: right;
+    color: #fff;
     font-weight: 600;
+    text-align: center;
+    width: 100%;
+    display: block;
 }
 .account-content .input-list>select{
     background: #666666;
@@ -159,8 +182,8 @@ ul {
     margin: 0 auto;
 }
 .user_avatar_edit .user_avatar_edit_inner {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     font-size: 89px;
     padding: 10px;
@@ -1139,7 +1162,7 @@ ul {
 
 }
 .call-item.speaker_button.speaker{
-   color:#32CD32!important;
+    color:#32CD32!important;
 }
 .call-item.speaker_button.earpiece{
     background-color: #666!important;
@@ -1147,6 +1170,22 @@ ul {
 }
 .header_drop_icon{
     background: linear-gradient(172deg,#4e4e4e,#595859);
+}
+.add_user_inner{
+    padding-top: 5%;
+}
+.add_user_inner .button{
+    background-color: #1d1f1f;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 30%;
+    padding: 10px;
+    border-radius: 50px;
+    margin: 0 auto;
+}
+.usersetting{
+    height: 100%;;
 }
 @media only screen and (max-device-width: 480px){
     .user_in_call_mic{

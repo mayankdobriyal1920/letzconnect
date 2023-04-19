@@ -6,7 +6,7 @@ const HelpAndSupportPage = () => {
         <IonPage>
             <SubHeader title={'Help And Support'}/>
             <IonContent fullscreen>
-                <div className="chat-list-col">
+                <div className="chat-list-col pt-5">
                     <div className="container">
                         <div id="accordion" className="accordion helpsupport">
 

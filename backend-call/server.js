@@ -277,6 +277,7 @@ function setupWebSocket(){
         });
         connection.on('close', function() {
            console.log('closed',clientsMemberData[userID]);
+           ///// Close connection on user leave call //////
            if(clientsMemberData[userID] && newRoomCreatedCustomApi){
                if(Object.keys(newRoomCreatedCustomApi).length){
                    let found = null;
@@ -299,6 +300,7 @@ function setupWebSocket(){
                        sendMessage(dataToSend,connection);
                    }
                }
+               ///// Close connection on user leave call //////
            }
         });
     });

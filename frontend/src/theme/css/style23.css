@@ -140,11 +140,12 @@ li.call-item.process_audio a img {
 }
 .before_start_user_call_section .before_start_user_call_sectioninner_ctrl {
     background: #555455;
-    box-shadow: inset 0 6px 11px 0 rgb(0 0 0 / 75);
+    /* box-shadow: inset 0 6px 11px 0 rgb(0 0 0 / 75); */
     align-self: center;
     width: 100%;
     padding: 20px;
     color: #fff;
+    border: 1px solid #9c9d9d;
 }
 .user_select_section .row {
     width: 100%!important;
@@ -228,7 +229,8 @@ span.current_user_name {
     font-size: 89px;
     padding: 27px;
     color: #fff;
-    background: #9b9999;
+    /* background: #9b9999; */
+    background: #e94b60;
 }
 .call_log_page_container svg {
     width: 15px;
@@ -472,7 +474,7 @@ img.mic_icon_image {
     cursor: pointer;
 }
 .account-content .input-list>a {
-    font-size: 12px;
+    font-size: 16px;
 }
 li.call-item img {
     width: 30px;
@@ -490,6 +492,9 @@ button.send_otp_button {
     margin-top: 18px;
     font-size: 14px;
     font-weight: 600;
+}
+.ionic-page-color-background {
+    --background: #4e4e4e!important;
 }
 @media only screen and (min-width: 769px) {
     .edit_user_col{
