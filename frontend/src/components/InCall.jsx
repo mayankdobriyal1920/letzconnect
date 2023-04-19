@@ -4,7 +4,7 @@ import Participant from "./Participant";
 import Counter from "./Counter.jsx";
 import MicIcon from "./MicIcon.jsx";
 import { useSelector,useDispatch } from 'react-redux';
-import { AudiotoggleBluetooth } from 'capacitor-plugin-audiotoggle-bluetooth';
+import { AudioToggle } from 'capacitor-audio-toggle';
 import { Capacitor } from '@capacitor/core';
 import {
     actionToChangeMyCurrentAudio,
@@ -183,12 +183,11 @@ const InCall = ({myPeer,myStream}) => {
             let curVol = '';
             if (preVolume === 'earpiece') {
                 curVol = 'speaker';
-                AudiotoggleBluetooth.setAudioMode({mode:'SPEAKER'});
             } else {
                 curVol = 'earpiece';
-                AudiotoggleBluetooth.setAudioMode({mode:'EARPIECE'});
             }
             setVolumeOn(curVol);
+            AudioToggle.setAudioMode({mode: curVol});
         }
     }
 
@@ -224,7 +223,7 @@ const InCall = ({myPeer,myStream}) => {
         keepAwake();
         if(Capacitor.isNativePlatform()) {
             setVolumeOn('speaker');
-            AudiotoggleBluetooth.setAudioMode({mode:'SPEAKER'});
+            AudioToggle.setAudioMode({mode: 'speaker'});
         }
         if(userInfo.isAdmin){
             dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
@@ -321,12 +320,12 @@ const InCall = ({myPeer,myStream}) => {
                                                 : ''
                                             }
 
-                                            {(userInfo.isAdmin) ?
-                                                <div className="call-users">
-                                                    {allMembersInCall}
-                                                </div>
-                                                : ''
-                                            }
+                                            {/*{(userInfo.isAdmin) ?*/}
+                                            {/*    <div className="call-users">*/}
+                                            {/*        {allMembersInCall}*/}
+                                            {/*    </div>*/}
+                                            {/*    : ''*/}
+                                            {/*}*/}
 
                                             <div className="admin-calling-screen-bt">
                                                 <div className="container">
