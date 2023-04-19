@@ -16,7 +16,7 @@ import {
 import {_getImageUrlByName, _getUserFirstName, connectToNewUser} from "../helpers/common";
 import $ from "jquery";
 import {MY_CURRENT_AUDIO_CHANGE} from "../constants/UserConstants";
-import { Haptics } from '@capacitor/haptics';
+import { Media } from '@ionic-native/media';
 
 const selectedMemberId = [];
 const InCall = ({myPeer,myStream}) => {
@@ -185,23 +185,16 @@ const InCall = ({myPeer,myStream}) => {
             let curVol = '';
             if (preVolume === 'earpiece') {
                 curVol = 'speaker';
+                Media.setSpeakerphoneOn(true);
             } else {
                 curVol = 'earpiece';
+                Media.setSpeakerphoneOn(false);
             }
             setVolumeOn(curVol);
-            Haptics.vibrate();
-            let getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
-            const audio = getUserMedia({ audio: { deviceId: curVol }});
-            audio.then(stream => {
-                const audioTracks = stream.getAudioTracks();
-                audioTracks.forEach(track => {
-                    track.applyConstraints({ deviceId: curVol });
-                });
-            });
-            AudioToggle.setAudioMode({mode: curVol});
+            console.log('Media',Media);
+            //AudioToggle.setAudioMode({mode: curVol});
         }
     }
-
 
     const handleAudioChangeParticipantTouchStart = (e) =>{
         e.preventDefault();
@@ -235,8 +228,8 @@ const InCall = ({myPeer,myStream}) => {
         keepAwake();
         if(Capacitor.isNativePlatform()) {
             setVolumeOn('speaker');
-            AudioToggle.setAudioMode({mode: 'speaker'});
-            setAudioToggleAction('earpiece');
+            //AudioToggle.setAudioMode({mode: 'speaker'});
+            Media.setSpeakerphoneOn(true);
         }
         if(userInfo.isAdmin){
             dispatch(actionToChangeMyCurrentAudio('UNMUTE'));
@@ -252,7 +245,6 @@ const InCall = ({myPeer,myStream}) => {
             }
         }
     },[])
-
     return (
         <>
             {(requestToAddNewMember) &&
@@ -334,12 +326,12 @@ const InCall = ({myPeer,myStream}) => {
                                                 : ''
                                             }
 
-                                            {/*{(userInfo.isAdmin) ?*/}
-                                            {/*    <div className="call-users">*/}
-                                            {/*        {allMembersInCall}*/}
-                                            {/*    </div>*/}
-                                            {/*    : ''*/}
-                                            {/*}*/}
+                                            {(userInfo.isAdmin) ?
+                                                <div className="call-users">
+                                                    {allMembersInCall}
+                                                </div>
+                                                : ''
+                                            }
 
                                             <div className="admin-calling-screen-bt">
                                                 <div className="container">

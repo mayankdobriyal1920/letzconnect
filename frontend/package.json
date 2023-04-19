@@ -14,6 +14,7 @@
     "@capacitor/status-bar": "1.0.6",
     "@daily-co/daily-js": "^0.21.0",
     "@ionic-native/crop": "^5.36.0",
+    "@ionic-native/media": "^5.36.0",
     "@ionic/pwa-elements": "^3.1.1",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
