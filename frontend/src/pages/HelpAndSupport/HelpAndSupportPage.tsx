@@ -54,7 +54,8 @@ const HelpAndSupportPage = () => {
                                 </IonAccordion>
                             </IonAccordionGroup>
                             <p style={{marginTop : "10px",fontSize:"13px"}}>for more query please feel free contact us at
-                                <a href="mailto:admin@letzconnect.com">admin@letzconnect.com</a></p>
+                                &nbsp;
+                                <a href="mailto:admin@letscall.co.in">admin@letscall.co.in</a></p>
                         </div>
                     </div>
                 </div>

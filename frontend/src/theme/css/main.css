@@ -60,6 +60,15 @@ ul {
     padding-top: 5%;
     padding-bottom: 5%;
 }
+.admin_user_section_container {
+    display: flex;
+    flex-flow: wrap;
+    padding-top: 10px;
+}
+.admin-calling-screen-bt {
+    padding-top: 6%;
+    margin-bottom: 50px!important;
+}
 .login-top-icon {
     width: 150px;
     height: 150px;
@@ -113,7 +122,7 @@ ul {
     padding-bottom: 20px;
 }
 .account-form form {
-    width: 50%;
+    width: 86%;
     margin: 0 auto;
 }
 .account-title>h3 {

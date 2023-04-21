@@ -77,7 +77,7 @@ const Login: React.FC = () => {
                   <input
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      type="password" name="pass" placeholder="Password" required/>
+                      type="text" name="pass" placeholder="Password" required/>
                 </div>
                 <div className="input-list">
                   <a onClick={()=>history.push('/app/forgot-password')}>Forgot Password?</a>

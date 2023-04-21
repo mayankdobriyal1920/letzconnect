@@ -128,6 +128,8 @@ const Container = styled.div`
   align-items: flex-start;
   position: relative;
   max-width: 104px;
+  padding:0px 5px;
+  margin:auto;
 `;
 const Avatar = styled.div`
   width: ${AVATAR_DIMENSION}px;
@@ -147,6 +149,9 @@ const Name = styled.p`
   padding-left: 4px;
   max-width: 80px;
   white-space: nowrap;
+  color:#fff;
+  width:100%;
+  text-align:center;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 20px;

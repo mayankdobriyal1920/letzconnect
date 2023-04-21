@@ -97,7 +97,7 @@ skypeCloneRouter.post(
                         },
                     });
                     const mailOptions = {
-                        from: 'no-reply@letzconnects.com',
+                        from: 'no-reply@letscall.com',
                         to: req.body.email,
                         subject: 'Otp verification mail for lets call website',
                         html: `<h1>Welcome</h1><p>This is your one time password <b>${otp}</b></p>`

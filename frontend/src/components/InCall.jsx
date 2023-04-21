@@ -296,6 +296,15 @@ const InCall = ({myPeer,myStream}) => {
                                                 }
                                             </div>
 
+                                            <div className={"admin_user_section_container"}>
+                                                {(userInfo.isAdmin) ?
+                                                    <>
+                                                     {allMembersInCall}
+                                                    </>
+                                                    : ''
+                                                }
+                                            </div>
+
                                             {!userInfo?.isAdmin ?
                                                 <div className="tap_to_speak_section">
                                                     <div className={"call-item " + (myCurrentAudioChange !== 'MUTE' ? 'process_audio' : 'user_in_call_mic')}>
@@ -319,13 +328,6 @@ const InCall = ({myPeer,myStream}) => {
                                                 </div>
                                                 : ''
                                             }
-
-                                            {/*{(userInfo.isAdmin) ?*/}
-                                            {/*    <div className="call-users">*/}
-                                            {/*        {allMembersInCall}*/}
-                                            {/*    </div>*/}
-                                            {/*    : ''*/}
-                                            {/*}*/}
 
                                             <div className="admin-calling-screen-bt">
                                                 <div className="container">

@@ -4,9 +4,11 @@ import './Login.css'
 import { useDispatch,useSelector,RootStateOrAny } from 'react-redux';
 import siteLogoUrl from '../../theme/images/logo2.png';
 import {actionToSaveNewPassword, actionToSendOtpFoResetPassword} from "../../actions/UserAction";
+import {useHistory} from "react-router-dom";
 
 const ForgotPasswordPage: React.FC = () => {
 
+    const history:any = useHistory();
     const dispatch:any = useDispatch();
     const [email, setEmail] = useState<string>('');
     const [otp, setOtp] = useState<string>('');
@@ -73,6 +75,10 @@ const ForgotPasswordPage: React.FC = () => {
         }
     }
 
+    const goToLoginPage = ()=>{
+        history.replace('/app/login');
+    }
+
     useEffect(()=>{
         if(error){
             setIserror(true);
@@ -83,7 +89,7 @@ const ForgotPasswordPage: React.FC = () => {
 
     return (
         <IonPage>
-            <IonContent fullscreen className="ion-padding ion-text-center">
+            <IonContent fullscreen className="ion-text-center ionic-page-color-background">
                 <IonToast
                     isOpen={showToast}
                     onDidDismiss={() => setShowToast(false)}
@@ -143,7 +149,7 @@ const ForgotPasswordPage: React.FC = () => {
                                             type="text" name="otp" placeholder="New Password"/>
                                     </div>
                                     <div className="input-list">
-                                        <a href="/">Login here?</a>
+                                        <a onClick={goToLoginPage}>Login here?</a>
                                     </div>
                                     <div className="input-list">
                                         <button onClick={handleLogin}
