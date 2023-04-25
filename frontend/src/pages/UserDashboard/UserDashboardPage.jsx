@@ -11,7 +11,7 @@ import {
   actionToGetAllUserData,
   actionToGetCurrentRoomData, actionToLeaveCallAndExitFromRoom
 } from '../../actions/UserAction';
-import {addAudioStream, removeClosePeerConnection} from "../../helpers/common";
+import {addAudioStream, getUserIdFromPeerConnection, removeClosePeerConnection} from "../../helpers/common";
 import {currentRoomDataReducer} from "../../reducers/UserReducers";
 
 let myPeer = null;
@@ -59,7 +59,7 @@ const UserDashboardPage = () => {
       if(roomId){
         setCallLoading(true);
           const userId = userData.id;
-          const peerConnectionId = userId+'~peer'+(Math.random() + 1).toString(36).substring(7);
+          const peerConnectionId = userId+'PEERjs'+(Math.random() + 1).toString(36).substring(7);
           myPeer = new Peer(peerConnectionId, {
             host: 'letscall.co.in',
             secure:true,
@@ -80,11 +80,11 @@ const UserDashboardPage = () => {
                 call.on('stream', userAudio => {
                   console.log('[PEER JS INCOMMING CALL STREM]',call);
                   members?.map((user)=>{
-                    if(user?.id == call?.peer && !user.audio){
+                    if(user?.id == getUserIdFromPeerConnection(call?.peer) && !user.audio){
                       audio.muted = true;
                     }
                   })
-                  audio.id = `AUDIO-${call.peer}`;
+                  audio.id = `AUDIO-${getUserIdFromPeerConnection(call.peer)}`;
                   addAudioStream(audio, userAudio)
                 })
                 call.on('close', () => {
@@ -95,6 +95,7 @@ const UserDashboardPage = () => {
 
               let memberData = userData;
               memberData.audio = false;
+              memberData.peer_id = id;
               dispatch(actionToAddInRoom(roomId,memberData));
               handleParticipantArrayUpdated(members);
               handleToSetViewInCall();

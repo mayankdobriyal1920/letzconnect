@@ -13,7 +13,12 @@ import {
 } from '../../actions/UserAction';
 import loader from '../../theme/images/loader.gif';
 import $ from 'jquery';
-import {_getUniqueId, addAudioStream, removeClosePeerConnection} from '../../helpers/common';
+import {
+  _getUniqueId,
+  addAudioStream,
+  getUserIdFromPeerConnection,
+  removeClosePeerConnection
+} from '../../helpers/common';
 import InCall from "../../components/InCall";
 import {INCALL, useCallState} from "../../CallProvider";
 
@@ -53,7 +58,7 @@ const AdminDashboardPage = () => {
         const members = selectedMemberId;
         const roomId = _getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId();
         dispatch(actionToCreateRoom(members,roomId,userInfo.id));
-        const peerConnectionId = userInfo.id+'~peer'+(Math.random() + 1).toString(36).substring(7);
+        const peerConnectionId = userInfo.id+'PEERjs'+(Math.random() + 1).toString(36).substring(7);
         myPeer = new Peer(peerConnectionId, {
           host: 'letscall.co.in',
           secure:true,
@@ -78,12 +83,11 @@ const AdminDashboardPage = () => {
               myPeer.on('call', call => {
                 console.log('[PEER JS INCOMMING CALL]',call);
                 call.answer(stream);
-
                 const audio = document.createElement('audio');
                 call.on('stream', userAudio => {
-                  audio.id = `AUDIO-${call.peer}`;
+                  audio.id = `AUDIO-${getUserIdFromPeerConnection(call.peer)}`;
                   members?.map((user)=>{
-                    if(user?.id == call?.peer && !user.audio){
+                    if(user?.id == getUserIdFromPeerConnection(call?.peer) && !user.audio){
                       audio.muted = true;
                     }
                   })

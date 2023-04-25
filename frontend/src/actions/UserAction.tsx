@@ -418,7 +418,7 @@ export const actionToMuteUnmuteUserCallLocally = (payload:any) => async (dispatc
   payload?.users?.map((id:any)=>{
      let audio:any = document.getElementById(`AUDIO-${id}`);
      if(audio != null && audio) {
-       audio.muted = payload?.audio == 'MUTE' ? true : false;
+       audio.muted = payload?.audio === 'MUTE';
      }
   })
 }

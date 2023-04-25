@@ -103,10 +103,11 @@ export const addAudioStream=(audio, stream)=> {
     document.getElementById('userAudioSectionId').appendChild(audio)
 }
 export const connectToNewUser=(user,stream,myPeer,members)=> {
-    console.log('[ NEW USER CONNECTED TO CALL]');
-    const call = myPeer.call(user.id,stream);
-    const audio = document.createElement('audio')
+    console.log('[ NEW USER CONNECTED TO CALL]',user);
+    const call = myPeer.call(user.peer_id,stream);
+    const audio = document.createElement('audio');
     call.on('stream', userStream => {
+        console.log('call.peer',call.peer);
         audio.id = `AUDIO-${getUserIdFromPeerConnection(call.peer)}`;
         members?.map((user)=>{
             if(user?.id == getUserIdFromPeerConnection(call.peer) && !user.audio){
@@ -121,7 +122,8 @@ export const connectToNewUser=(user,stream,myPeer,members)=> {
     peers[user.id] = call;
 }
 export const getUserIdFromPeerConnection = (peerId) =>{
-    if(peerId?.indexOf('~') >= 0){
-        return peerId?.split('~')[0];
+    console.log('peerId',peerId);
+    if(peerId?.indexOf('PEERjs') >= 0){
+        return peerId?.split('PEERjs')[0];
     }
 }
