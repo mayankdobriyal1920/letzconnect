@@ -22,19 +22,6 @@ let myPeer = null;
 let myStream = null;
 const iceServers= [
   {
-    urls: "stun:openrelay.metered.ca:80",
-  },
-  {
-    urls: "turn:openrelay.metered.ca:80",
-    username: "openrelayproject",
-    credential: "openrelayproject",
-  },
-  {
-    urls: "turn:openrelay.metered.ca:443",
-    username: "openrelayproject",
-    credential: "openrelayproject",
-  },
-  {
     urls: "turn:openrelay.metered.ca:443?transport=tcp",
     username: "openrelayproject",
     credential: "openrelayproject",
@@ -66,8 +53,8 @@ const AdminDashboardPage = () => {
         const members = selectedMemberId;
         const roomId = _getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId();
         dispatch(actionToCreateRoom(members,roomId,userInfo.id));
-
-        myPeer = new Peer(userInfo.id, {
+        const peerConnectionId = userInfo.id+'~peer'+(Math.random() + 1).toString(36).substring(7);
+        myPeer = new Peer(peerConnectionId, {
           host: 'letscall.co.in',
           secure:true,
           config: {'iceServers': iceServers},
@@ -210,7 +197,7 @@ const AdminDashboardPage = () => {
   },[]);
 
   useEffect(()=>{
-     if(newLeaveUserInCallData != null){
+     if(newLeaveUserInCallData){
        removeClosePeerConnection(newLeaveUserInCallData);
      }
   },[newLeaveUserInCallData]);

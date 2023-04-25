@@ -93,13 +93,6 @@ export function handleCallSocketEvent(dispatch:any,state:any,data:any){
         case 'newMemberAddedToCurrentRoom': {
            if(data?.roomData?.roomId === state?.currentRoomData?.roomId){
                  console.log('[NEW MEMBER JOINED]',data?.roomData);
-                 let found = false;
-                 state?.currentRoomData?.members?.map((member:any)=>{
-                     console.log(member);
-                     if(member?.id === data?.userData?.id){
-                         found = true;
-                     }
-                 })
                setTimeout(function () {
                    dispatch(actionToChangeRoomDataLocally(data?.roomData));
                    dispatch(actionToJoinNewUserInCurrentCall(data?.userData));

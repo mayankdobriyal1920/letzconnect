@@ -107,9 +107,9 @@ export const connectToNewUser=(user,stream,myPeer,members)=> {
     const call = myPeer.call(user.id,stream);
     const audio = document.createElement('audio')
     call.on('stream', userStream => {
-        audio.id = `AUDIO-${call.peer}`;
+        audio.id = `AUDIO-${getUserIdFromPeerConnection(call.peer)}`;
         members?.map((user)=>{
-            if(user?.id == call?.peer && !user.audio){
+            if(user?.id == getUserIdFromPeerConnection(call.peer) && !user.audio){
                 audio.muted = true;
             }
         })
@@ -119,4 +119,9 @@ export const connectToNewUser=(user,stream,myPeer,members)=> {
         audio.remove()
     })
     peers[user.id] = call;
+}
+export const getUserIdFromPeerConnection = (peerId) =>{
+    if(peerId?.indexOf('~') >= 0){
+        return peerId?.split('~')[0];
+    }
 }

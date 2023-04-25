@@ -16,27 +16,33 @@ import {currentRoomDataReducer} from "../../reducers/UserReducers";
 
 let myPeer = null;
 let myStream = null;
+// const iceServers= [
+//   {
+//     urls: "stun:openrelay.metered.ca:80",
+//   },
+//   {
+//     urls: "turn:openrelay.metered.ca:80",
+//     username: "openrelayproject",
+//     credential: "openrelayproject",
+//   },
+//   {
+//     urls: "turn:openrelay.metered.ca:443",
+//     username: "openrelayproject",
+//     credential: "openrelayproject",
+//   },
+//   {
+//     urls: "turn:openrelay.metered.ca:443?transport=tcp",
+//     username: "openrelayproject",
+//     credential: "openrelayproject",
+//   },
+// ];
 const iceServers= [
-  {
-    urls: "stun:openrelay.metered.ca:80",
-  },
-  {
-    urls: "turn:openrelay.metered.ca:80",
-    username: "openrelayproject",
-    credential: "openrelayproject",
-  },
-  {
-    urls: "turn:openrelay.metered.ca:443",
-    username: "openrelayproject",
-    credential: "openrelayproject",
-  },
   {
     urls: "turn:openrelay.metered.ca:443?transport=tcp",
     username: "openrelayproject",
     credential: "openrelayproject",
   },
 ];
-
 const UserDashboardPage = () => {
   let history = useHistory();
   const userData = useSelector((state) => state.userSignin.userInfo);
@@ -53,7 +59,8 @@ const UserDashboardPage = () => {
       if(roomId){
         setCallLoading(true);
           const userId = userData.id;
-          myPeer = new Peer(userId, {
+          const peerConnectionId = userId+'~peer'+(Math.random() + 1).toString(36).substring(7);
+          myPeer = new Peer(peerConnectionId, {
             host: 'letscall.co.in',
             secure:true,
             config: {'iceServers': iceServers},
@@ -141,7 +148,7 @@ const UserDashboardPage = () => {
   },[callSocketMessageBroadcast]);
 
   useEffect(()=>{
-    if(newLeaveUserInCallData != null){
+    if(newLeaveUserInCallData){
       removeClosePeerConnection(newLeaveUserInCallData);
     }
   },[newLeaveUserInCallData]);

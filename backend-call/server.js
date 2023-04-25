@@ -172,8 +172,9 @@ function setupWebSocket(){
                                 }
                             })
 
-                            if(found === null)
+                            if(found === null) {
                                 newRoomCreatedCustomApi[dataToSend.adminId]?.members.push(dataToSend.member);
+                            }
 
                             clientsMemberData[userID] = dataToSend.member.id;
 
@@ -186,13 +187,15 @@ function setupWebSocket(){
                         }
                         break;
                     case 'removeCurrentRoomAndEndCall':
-                        if(newRoomCreatedCustomApi[dataToSend.adminId] != undefined){
+                        if(newRoomCreatedCustomApi[dataToSend.adminId]){
                             delete newRoomCreatedCustomApi[dataToSend.adminId];
+                        if(newRoomCreatedCustomApiMembers[dataToSend.adminId])
+                            delete newRoomCreatedCustomApiMembers[dataToSend.adminId];
                             sendMessage(dataToSend,connection);
                         }
                         break;
                     case 'handleMuteUnmuteInCall':
-                        if(newRoomCreatedCustomApi[dataToSend.adminId] != undefined){
+                        if(newRoomCreatedCustomApi[dataToSend.adminId]){
                             let membersInCall =  newRoomCreatedCustomApi[dataToSend.adminId]?.members;
                             if(dataToSend?.users){
                                 dataToSend?.users?.map((id)=>{
@@ -214,7 +217,7 @@ function setupWebSocket(){
                         }
                         break;
                     case 'leaveCurrentRunningCall':
-                        if(newRoomCreatedCustomApi[dataToSend.adminId] != undefined){
+                        if(newRoomCreatedCustomApi[dataToSend.adminId]){
                             let membersInCall =  newRoomCreatedCustomApi[dataToSend.adminId]?.members;
                             if(dataToSend?.userId){
                                 membersInCall?.map((user,key)=>{
@@ -233,7 +236,7 @@ function setupWebSocket(){
                         }
                         break;
                     case 'kickOutFromCurrentRunningCall':
-                        if(newRoomCreatedCustomApi[dataToSend.adminId] != undefined){
+                        if(newRoomCreatedCustomApi[dataToSend.adminId]){
                             let membersInCall =  newRoomCreatedCustomApi[dataToSend.adminId]?.members;
                             if(dataToSend?.userId){
                                 membersInCall?.map((user,key)=>{
@@ -243,7 +246,7 @@ function setupWebSocket(){
                                 })
                             }
                             newRoomCreatedCustomApi[dataToSend.adminId].members = membersInCall;
-                            if(newRoomCreatedCustomApiMembers[dataToSend.adminId] != undefined) {
+                            if(newRoomCreatedCustomApiMembers[dataToSend.adminId]) {
                                 const indexOfId = newRoomCreatedCustomApiMembers[dataToSend.adminId].indexOf(dataToSend?.userId);
                                 if(indexOfId >= 0) {
                                     newRoomCreatedCustomApiMembers[dataToSend.adminId].splice(indexOfId, 1);
@@ -259,10 +262,8 @@ function setupWebSocket(){
                         }
                         break;
                     case 'addedNewUserInCurrentMeeting':
-                        if(newRoomCreatedCustomApiMembers[dataToSend.adminId] != undefined){
-                            if(newRoomCreatedCustomApiMembers[dataToSend.adminId] != undefined) {
-                                newRoomCreatedCustomApiMembers[dataToSend.adminId] = dataToSend?.members;
-                            }
+                        if(newRoomCreatedCustomApiMembers[dataToSend.adminId]){
+                            newRoomCreatedCustomApiMembers[dataToSend.adminId] = dataToSend?.members;
                             dataToSend = {
                                 roomData: newRoomCreatedCustomApi[dataToSend.adminId],
                                 members: dataToSend.members,
@@ -290,7 +291,7 @@ function setupWebSocket(){
                            }
                        })
                    })
-                   if(found !== null && roomDataId !== null){
+                   if(found !== null && roomDataId !== null && newRoomCreatedCustomApi[roomDataId]){
                        newRoomCreatedCustomApi[roomDataId].members.splice(found,1);
                        let dataToSend = {
                            roomData: newRoomCreatedCustomApi[roomDataId],
