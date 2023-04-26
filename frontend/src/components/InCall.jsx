@@ -206,7 +206,9 @@ const InCall = ({myPeer,myStream}) => {
     }
 
     useEffect(()=>{
+        console.log('[NEW USER JOINED CALL] OU',newAddedUserInCurrentCall);
         if(newAddedUserInCurrentCall?.id != undefined){
+            console.log('[NEW USER JOINED CALL] IN',newAddedUserInCurrentCall);
             connectToNewUser(newAddedUserInCurrentCall,myStream,myPeer,members);
         }
     },[newAddedUserInCurrentCall]);

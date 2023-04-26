@@ -12,10 +12,10 @@ import {
   actionToGetCurrentRoomData, actionToLeaveCallAndExitFromRoom
 } from '../../actions/UserAction';
 import {addAudioStream, getUserIdFromPeerConnection, removeClosePeerConnection} from "../../helpers/common";
-import {currentRoomDataReducer} from "../../reducers/UserReducers";
 
 let myPeer = null;
 let myStream = null;
+
 // const iceServers= [
 //   {
 //     urls: "stun:openrelay.metered.ca:80",
@@ -36,13 +36,49 @@ let myStream = null;
 //     credential: "openrelayproject",
 //   },
 // ];
+
+// const iceServers= [
+//   {
+//     urls: "stun:a.relay.metered.ca:80",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:80",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:80?transport=tcp",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:443",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:443?transport=tcp",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+// ];
+
 const iceServers= [
   {
-    urls: "turn:openrelay.metered.ca:443?transport=tcp",
-    username: "openrelayproject",
-    credential: "openrelayproject",
+    urls: "stun:stun.l.google.com:19302",
+  },
+  {
+    urls: "turn:letscall.co.in:3478?transport=tcp",
+    username: "letscall",
+    credential: "letscall123",
+  },
+  {
+    urls: "turn:letscall.co.in:5349?transport=tcp",
+    username: "letscall",
+    credential: "letscall123",
   },
 ];
+
 const UserDashboardPage = () => {
   let history = useHistory();
   const userData = useSelector((state) => state.userSignin.userInfo);
@@ -91,7 +127,6 @@ const UserDashboardPage = () => {
                   audio.remove()
                 })
               })
-
 
               let memberData = userData;
               memberData.audio = false;

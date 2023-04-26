@@ -25,11 +25,45 @@ import {INCALL, useCallState} from "../../CallProvider";
 const selectedMemberId = [];
 let myPeer = null;
 let myStream = null;
+// const iceServers= [
+//   {
+//     urls: "stun:a.relay.metered.ca:80",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:80",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:80?transport=tcp",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:443",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+//   {
+//     urls: "turn:a.relay.metered.ca:443?transport=tcp",
+//     username: "7fb5c51836bacf73205785f6",
+//     credential: "Jr2/4Vpk6qYB1YIZ",
+//   },
+// ];
+
 const iceServers= [
   {
-    urls: "turn:openrelay.metered.ca:443?transport=tcp",
-    username: "openrelayproject",
-    credential: "openrelayproject",
+    urls: "stun:stun.l.google.com:19302",
+  },
+  {
+    urls: "turn:letscall.co.in:3478?transport=tcp",
+    username: "letscall",
+    credential: "letscall123",
+  },
+  {
+    urls: "turn:letscall.co.in:5349?transport=tcp",
+    username: "letscall",
+    credential: "letscall123",
   },
 ];
 
