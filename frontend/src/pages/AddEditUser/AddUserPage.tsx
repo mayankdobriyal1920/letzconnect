@@ -7,6 +7,7 @@ import {_getUniqueId} from "../../helpers/common";
 const AddUserPage = () => {
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
+    const [userName,setUserName] = useState('');
     const [password,setPassword] = useState('');
     const [about,setAbout] = useState('');
     const [isAdmin,setIsAdmin]:any = useState(0);
@@ -19,7 +20,7 @@ const AddUserPage = () => {
     const userInfo = useSelector((state:RootStateOrAny) => state.userSignin.userInfo);
 
     const validateUpdateForm = ()=>{
-        if(!name?.trim()?.length || !email?.trim()?.length || !password?.trim()?.length){
+        if(!name?.trim()?.length || !userName?.trim()?.length || !password?.trim()?.length){
             return false;
         }
         return true;
@@ -28,10 +29,10 @@ const AddUserPage = () => {
     const submitFormAddUser = (e:any)=>{
         e.preventDefault();
         if(addingUserLoading) return;
-        if(name?.trim()?.length && email?.trim()?.length && password?.trim()?.length){
+        if(name?.trim()?.length && userName?.trim()?.length && password?.trim()?.length){
             if(allUsersDataArray.length){
                 allUsersDataArray.map((user:any)=>{
-                    if(user.email.toLowerCase() == email.toLowerCase()){
+                    if(user.email.toLowerCase() == userName.toLowerCase()){
                         setEmailAlreadyExistToast(true);
                         return false;
                     }
@@ -43,7 +44,7 @@ const AddUserPage = () => {
             let payload = {
                 id:_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId()+'-'+_getUniqueId(),
                 name:name,
-                email:email.toLowerCase(),
+                email:userName.toLowerCase(),
                 password:password,
                 description:about,
                 created_by:createdBy,
@@ -59,6 +60,7 @@ const AddUserPage = () => {
                 setName('');
                 setPassword('');
                 setAbout('');
+                setUserName('');
                 setIsAdmin(0);
                 setIsSuperAdmin(0);
                 setAddingUserLoading(false);
@@ -95,7 +97,7 @@ const AddUserPage = () => {
                 <IonToast
                     isOpen={emailAlreadyExistToast}
                     onDidDismiss={() => setEmailAlreadyExistToast(false)}
-                    message="This email already exist!"
+                    message="This User Name already exist!"
                     duration={3000}
                 />
                 <div className="chat-list-col">
@@ -105,6 +107,9 @@ const AddUserPage = () => {
                                 <form onSubmit={submitFormAddUser}>
                                     <div className="input-list">
                                         <input type="text" placeholder="Name" onChange={(e)=>setName(e.target.value)} required value={name}/>
+                                    </div>
+                                    <div className="input-list">
+                                        <input type="text" onChange={(e)=>setUserName(e.target.value)} placeholder="User Name" required value={userName}/>
                                     </div>
                                     <div className="input-list">
                                         <input type="email" onChange={(e)=>setEmail(e.target.value)} placeholder="Email" required value={email}/>

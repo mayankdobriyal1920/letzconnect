@@ -10,7 +10,7 @@ const Login: React.FC = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const [email, setEmail] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [iserror, setIserror] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -19,17 +19,16 @@ const Login: React.FC = () => {
 
   const handleLogin = () => {
     if(loginLoading) return false;
-    if (!email) {
-      setMessage("Please enter a valid email");
+    if (!userName) {
+      setMessage("Please enter User Name");
       setIserror(true);
       return;
     }
     setLoginLoading(true);
     const loginData = {
-      email,
+      email:userName,
       password,
     }
-
     ////// calling api login service //////
     dispatch(signin(loginData));
     ////// calling api login service //////
@@ -69,9 +68,9 @@ const Login: React.FC = () => {
               <form>
                 <div className="input-list">
                   <input
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      type="email" name="email" placeholder="Email Address" required/>
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      type="text" name="text" placeholder="User Name" required/>
                 </div>
                 <div className="input-list">
                   <input
