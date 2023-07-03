@@ -1,0 +1,6 @@
+{
+	"appId": "app.letscall.com",
+	"appName": "LETS CALL",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
