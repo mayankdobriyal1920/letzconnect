@@ -299,6 +299,13 @@ function setupWebSocket(){
                            type: 'leaveCurrentRunningCall'
                        }
                        sendMessage(dataToSend,connection);
+
+                       dataToSend = {
+                           roomData: newRoomCreatedCustomApi[dataToSend.adminId],
+                           userId: clientsMemberData[userID],
+                           type: 'kickOutFromCurrentRunningCall'
+                       }
+                       sendMessage(dataToSend,connection);
                    }
                }
                ///// Close connection on user leave call //////
